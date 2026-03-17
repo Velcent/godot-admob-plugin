@@ -24,6 +24,9 @@ using Godot;
 using PoingStudios.AdMob.Api;
 using PoingStudios.AdMob.Api.Core;
 using PoingStudios.AdMob.Api.Listeners;
+using PoingStudios.AdMob.Mediation.Extras.AdColony;
+using PoingStudios.AdMob.Mediation.Extras.Meta;
+using PoingStudios.AdMob.Mediation.Extras.Vungle;
 using PoingStudios.AdMob.Sample;
 
 public partial class MainCSharpExample : Control, ISampleLogger
@@ -78,6 +81,26 @@ public partial class MainCSharpExample : Control, ISampleLogger
 	{
 		LogMessage("MobileAds initialization complete");
 		LogAdapterStatus(status);
+
+		SetupMediationAdapters();
+
+		if (OS.GetName() == "iOS")
+		{
+			FBAdSettings.SetAdvertiserTrackingEnabled(true);
+		}
+	}
+
+	private void SetupMediationAdapters()
+	{
+		// AdColony setup example
+		var adColonyOptions = new AdColonyAppOptions();
+		adColonyOptions.SetPrivacyConsentString(AdColonyAppOptions.Ccpa, "OPTED_OUT");
+		adColonyOptions.SetPrivacyFrameworkRequired(AdColonyAppOptions.Ccpa, false);
+		adColonyOptions.SetTestMode(false);
+
+		// Vungle setup example
+		Vungle.UpdateCcpaStatus(Vungle.Consent.OptedOut);
+		Vungle.UpdateConsentStatus(Vungle.Consent.OptedIn, "consent_message");
 	}
 
 	private void _OnGetInitializationStatusPressed()

@@ -23,7 +23,7 @@
 class_name Vungle
 extends MobileSingletonPlugin
 
-static var _plugin := _get_plugin("PoingGodotAdMobVungle")
+static var _plugin := _get_plugin("PoingGodotAdMobVungle", false)
 
 enum Consent {
 	OPTED_IN,

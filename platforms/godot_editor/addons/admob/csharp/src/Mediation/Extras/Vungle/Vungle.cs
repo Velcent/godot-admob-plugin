@@ -8,7 +8,7 @@ namespace PoingStudios.AdMob.Mediation.Extras.Vungle
 {
     public class Vungle : MobileSingletonPlugin
     {
-        private static readonly GodotObject _plugin = GetPlugin("PoingGodotAdMobVungle");
+        private static readonly GodotObject _plugin = GetPlugin("PoingGodotAdMobVungle", false);
 
         public enum Consent
         {

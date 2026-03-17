@@ -30,7 +30,7 @@ const PLUGIN_NAME := "PoingGodotAdMobAdColonyAppOptions"
 var _plugin : Object
 
 func _init() -> void:
-	_plugin = _get_plugin(PLUGIN_NAME)
+	_plugin = _get_plugin(PLUGIN_NAME, false)
 
 func set_privacy_framework_required(type : String, required : bool) -> void:
 	if _plugin:

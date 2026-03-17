@@ -9,7 +9,7 @@ namespace PoingStudios.AdMob.Mediation.Extras.Meta
     public class FBAdSettings : MobileSingletonPlugin
     {
         private static readonly GodotObject _plugin =
-            OS.GetName() == "iOS" ? GetPlugin("PoingGodotAdMobMetaFBAdSettings") : null;
+            OS.GetName() == "iOS" ? GetPlugin("PoingGodotAdMobMetaFBAdSettings", false) : null;
 
         public static void SetAdvertiserTrackingEnabled(bool trackingRequired)
         {

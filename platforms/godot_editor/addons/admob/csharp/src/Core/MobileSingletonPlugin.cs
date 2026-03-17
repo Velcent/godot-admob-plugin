@@ -7,17 +7,32 @@ namespace PoingStudios.AdMob.Core
 {
 	public class MobileSingletonPlugin
 	{
-		protected static GodotObject GetPlugin(string pluginName)
+		protected static GodotObject GetPlugin(string pluginName, bool isRequired = true)
 		{
 			if (Engine.HasSingleton(pluginName))
 			{
 				return Engine.GetSingleton(pluginName);
 			}
 
-			string os = OS.GetName();
-			if (os == "Android" || os == "iOS")
+			string osName = OS.GetName();
+			if (osName != "Android" && osName != "iOS")
 			{
-				GD.PrintErr($"{pluginName} not found, make sure you marked all 'PoingAdMob' plugins on export tab");
+				return null;
+			}
+
+			string location = osName == "Android" 
+				? "'res://addons/admob/android/config.gd' and 'Use Gradle Build' is enabled" 
+				: "the 'Plugins' section of the Export tab";
+			
+			string message = $"{pluginName} not found, make sure it is enabled in {location}";
+
+			if (isRequired)
+			{
+				GD.PrintErr(message);
+			}
+			else
+			{
+				GD.PushWarning(message);
 			}
 
 			return null;

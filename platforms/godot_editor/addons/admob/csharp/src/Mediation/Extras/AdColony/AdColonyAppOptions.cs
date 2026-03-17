@@ -16,7 +16,7 @@ namespace PoingStudios.AdMob.Mediation.Extras.AdColony
 
         public AdColonyAppOptions()
         {
-            _plugin = GetPlugin(PluginName);
+            _plugin = GetPlugin(PluginName, false);
         }
 
         public void SetPrivacyFrameworkRequired(string type, bool required)

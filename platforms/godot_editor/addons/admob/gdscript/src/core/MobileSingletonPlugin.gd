@@ -22,12 +22,21 @@
 
 class_name MobileSingletonPlugin
 
-static func _get_plugin(plugin_name: String) -> Object:
+static func _get_plugin(plugin_name: String, is_required := true) -> Object:
 	if (Engine.has_singleton(plugin_name)):
 		return Engine.get_singleton(plugin_name)
 
-	if OS.get_name() == "Android" or OS.get_name() == "iOS":
-		printerr(plugin_name + " not found, make sure you marked all 'PoingAdMob' plugins on export tab")
+	var os_name := OS.get_name()
+	if os_name != "Android" and os_name != "iOS":
+		return null
+
+	var location := "'res://addons/admob/android/config.gd' and 'Use Gradle Build' is enabled" if os_name == "Android" else "the 'Plugins' section of the Export tab"
+	var message := plugin_name + " not found, make sure it is enabled in " + location
+
+	if is_required:
+		printerr(message)
+	else:
+		push_warning(message)
 
 	return null
 
