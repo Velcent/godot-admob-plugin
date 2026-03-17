@@ -1,0 +1,21 @@
+# Godot AdMob Editor Plugin
+> A high-performance Godot plugin for AdMob integration on Android and iOS.
+
+## Core Architecture
+- **GDScript API:** `platforms/godot_editor/addons/admob/admob.gd`
+- **C# API:** `platforms/godot_editor/addons/admob/csharp/`
+- **Android Implementation:** `platforms/android/` (Java/Kotlin)
+- **iOS Implementation:** `platforms/ios/` (Objective-C/Swift/SCons)
+- **Docs:** `docs/` (MkDocs)
+
+## Rules for LLMs
+1. **Sync:** Changes to ad formats must be updated across GDScript, C#, Android, and iOS.
+2. **GDScript:** Use `:=` for inference. No `class_name` in `internal/`.
+3. **C#:** Maintain parity with the GDScript API.
+3. **Build:** Use root scripts like `./scripts/build_local.sh`.
+4. **Efficiency:** Ignore `.godot/`, `.gradle/`, and `platforms/*/build/`.
+
+## Key Files
+- `platforms/godot_editor/addons/admob/admob.gd`
+- `platforms/android/build.gradle`
+- `platforms/ios/Package.swift`
