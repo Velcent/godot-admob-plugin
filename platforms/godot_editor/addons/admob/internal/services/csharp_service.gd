@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2023-present Poing Studios
+# Copyright (c) 2026-present Poing Studios
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-@tool
-extends EditorPlugin
-
-const MENU_NAME := "AdMob Manager"
-const AdMobEditorMenu := preload("res://addons/admob/internal/editor/editor_menu.gd")
-const CSharpService := preload("res://addons/admob/internal/services/csharp_service.gd")
-
-var _main_exporter := preload("res://addons/admob/internal/exporters/main_export_plugin.gd").new()
-var _android_exporter := preload("res://addons/admob/internal/exporters/android/export_plugin.gd").new()
-var _ios_exporter := preload("res://addons/admob/internal/exporters/ios/export_plugin.gd").new()
-
-func _enter_tree() -> void:
-	CSharpService.manage_visibility()
-	add_export_plugin(_main_exporter)
-	add_export_plugin(_android_exporter)
-	add_export_plugin(_ios_exporter)
-	add_tool_submenu_item(MENU_NAME, AdMobEditorMenu.new(self))
-
-func _exit_tree() -> void:
-	remove_export_plugin(_main_exporter)
-	remove_export_plugin(_android_exporter)
-	remove_export_plugin(_ios_exporter)
-	remove_tool_menu_item(MENU_NAME)
+static func manage_visibility() -> void:
+	var is_csharp_project := false
+	var dir := DirAccess.open("res://")
+	if dir:
+		dir.list_dir_begin()
+		var file_name := dir.get_next()
+		while file_name != "":
+			if file_name.get_extension() == "csproj":
+				is_csharp_project = true
+				break
+			file_name = dir.get_next()
+	
+	var csharp_gdignore_path := "res://addons/admob/csharp/.gdignore"
+	if is_csharp_project:
+		if FileAccess.file_exists(csharp_gdignore_path):
+			DirAccess.remove_absolute(csharp_gdignore_path)
+			print("AdMob: C# project detected, showing C# folder.")
+	else:
+		if not FileAccess.file_exists(csharp_gdignore_path):
+			var file := FileAccess.open(csharp_gdignore_path, FileAccess.WRITE)
+			if file:
+				file.store_string("")
+				file.close()
+				print("AdMob: Non-C# project detected, hiding C# folder.")

@@ -21,10 +21,12 @@ This file is the authoritative source of truth for AI agents (Gemini CLI, Claude
 - **Docs:** `mkdocs serve` (Requires Python/MkDocs).
 
 ## 📝 Critical Coding Standards
+- **License Header:** EVERY new file MUST start with the project's MIT License header (copy from `admob.gd`).
 - **GDScript:**
   - Always use `:=` for type inference.
   - No `class_name` in `addons/admob/internal/`.
-- **C#:**
+- **C# Bridge:**
+  - Managed by `CSharpService.gd`: Auto-hides `csharp/` folder via `.gdignore` if no `.csproj` is found in root.
   - Follow standard C# naming conventions (PascalCase for methods/classes).
   - Ensure parity with the GDScript API.
 - **Cross-Platform Sync:**
@@ -38,9 +40,9 @@ This file is the authoritative source of truth for AI agents (Gemini CLI, Claude
 - **Token Saver:** Do not search/read `platforms/*/build/`, `.godot/`, or `docs/assets/`.
 - **Security:** Never log or commit API Keys or `.env` files.
 - **Workflow:** 
-  - **Gemini:** Use `codebase_investigator` for architectural questions.
-  - **Claude:** Use `/compact` mode and outline plans before editing.
-  - **All:** Reproduce bugs with a script/test before fixing.
+  - Always reproduce bugs with a minimal script or test before fixing.
+  - **Gemini:** Prioritize using codebase search or investigation tools for architectural questions before reading entire files.
+  - **Claude:** See `CLAUDE.md` for specific command-line instructions.
 
 ## 🔗 Key Files for Quick Reference
 - `platforms/godot_editor/addons/admob/admob.gd` (Main API)
