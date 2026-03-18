@@ -20,7 +20,10 @@ This file is the authoritative source of truth for ALL AI agents (Gemini, Claude
 - **License Header:** EVERY new file MUST start with the project's MIT License header.
 - **GDScript:** Always use `:=` for type inference. Prefix bridge signals with `_on_admob_`.
 - **C#:** Use PascalCase. Maintain 1:1 parity with the GDScript API.
-- **Cross-Platform Sync:** Follow the protocol in `.github/ai/guides/sync.md`.
+- **Cross-Platform Sync:** Follow protocol in `.github/ai/guides/sync/SKILL.md`.
+- **Parity Checker:** Follow protocol in `.github/ai/guides/parity-checker/SKILL.md`.
+- **Release Manager:** Follow protocol in `.github/ai/guides/release-manager/SKILL.md`.
+- **Doc Master:** Follow protocol in `.github/ai/guides/doc-master/SKILL.md`.
 
 ## 🚫 Constraints & Security
 - **Security:** Never log/commit API Keys or `.env` files.
