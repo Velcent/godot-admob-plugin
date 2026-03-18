@@ -23,13 +23,14 @@ jobs:
       run: |
         LATEST=$(gh api repos/godotengine/godot/releases --jq '[.[] | select(.tag_name | test("^4\\.[0-9]+(\\.[0-9]+)?-stable$")) | .tag_name][0]' | sed 's/-stable//')
         LATEST_PAD=$(echo "$LATEST" | awk -F. '{if(NF==2) print $0".0"; else print $0}')
-        PLUGIN_VERSION=v$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
+        PLUGIN_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
         
-        RELEASE_EXISTS=$(gh api "repos/${{ github.repository }}/releases/tags/${PLUGIN_VERSION}" > /dev/null 2>&1 && echo "true" || echo "false")
+        TAG="v${PLUGIN_VERSION#v}"
+        RELEASE_EXISTS=$(gh api "repos/${{ github.repository }}/releases/tags/${TAG}" > /dev/null 2>&1 && echo "true" || echo "false")
         
         if [ "$RELEASE_EXISTS" = "true" ]; then
-          A_EXISTS=$(gh api "repos/${{ github.repository }}/releases/tags/${PLUGIN_VERSION}" --jq ".assets[].name" 2>/dev/null | grep -q "poing-godot-admob-android-v${LATEST_PAD}.zip" && echo "true" || echo "false")
-          I_EXISTS=$(gh api "repos/${{ github.repository }}/releases/tags/${PLUGIN_VERSION}" --jq ".assets[].name" 2>/dev/null | grep -q "poing-godot-admob-ios-v${LATEST_PAD}.zip" && echo "true" || echo "false")
+          A_EXISTS=$(gh api "repos/${{ github.repository }}/releases/tags/${TAG}" --jq ".assets[].name" 2>/dev/null | grep -q "poing-godot-admob-android-v${LATEST_PAD}.zip" && echo "true" || echo "false")
+          I_EXISTS=$(gh api "repos/${{ github.repository }}/releases/tags/${TAG}" --jq ".assets[].name" 2>/dev/null | grep -q "poing-godot-admob-ios-v${LATEST_PAD}.zip" && echo "true" || echo "false")
         else
           A_EXISTS="false"
           I_EXISTS="false"
@@ -70,7 +71,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/android/.output/poing-godot-admob-android-v${{ needs.detect-latest.outputs.godot_version }}.zip
-        tag: v${{ env.PLUGIN_VERSION }}
+        tag: v${{ env.PLUGIN_VERSION#v }}
         overwrite: true
 
   ios:
@@ -100,5 +101,5 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/ios/bin/release/*.zip
         file_glob: true
-        tag: v${{ env.PLUGIN_VERSION }}
+        tag: v${{ env.PLUGIN_VERSION#v }}
         overwrite: true

@@ -18,11 +18,12 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        if gh api "repos/${{ github.repository }}/releases/tags/v${{ env.PLUGIN_VERSION }}" > /dev/null 2>&1; then
-          echo "::error::Release v${{ env.PLUGIN_VERSION }} already exists. Bump the version before releasing."
+        TAG="v${PLUGIN_VERSION#v}"
+        if gh api "repos/${{ github.repository }}/releases/tags/${TAG}" > /dev/null 2>&1; then
+          echo "::error::Release ${TAG} already exists. Bump the version before releasing."
           exit 1
         fi
-        echo "No existing release found for v${{ env.PLUGIN_VERSION }}. Proceeding..."
+        echo "No existing release found for ${TAG}. Proceeding..."
 
   android-template:
     name: Compiling Android (Godot ${{matrix.GODOT_VERSIONS}})
@@ -57,8 +58,8 @@ jobs:
         target_commit: ${{ github.ref_name }}
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/android/.output/poing-godot-admob-android-v${{matrix.GODOT_VERSIONS}}.zip
-        tag: v${{env.PLUGIN_VERSION}}
-        release_name: v${{env.PLUGIN_VERSION}}
+        tag: v${{env.PLUGIN_VERSION#v}}
+        release_name: v${{env.PLUGIN_VERSION#v}}
         overwrite: true
 
   ios-template:
@@ -103,8 +104,8 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/ios/bin/release/*.zip
         file_glob: true
-        tag: v${{env.PLUGIN_VERSION}}
-        release_name: v${{env.PLUGIN_VERSION}}
+        tag: v${{env.PLUGIN_VERSION#v}}
+        release_name: v${{env.PLUGIN_VERSION#v}}
         overwrite: true
 
   godot_editor:
@@ -128,8 +129,8 @@ jobs:
         target_commit: ${{ github.ref_name }}
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/godot_editor/${{ env.ZIP_NAME }}
-        tag: v${{ env.PLUGIN_VERSION }}
-        release_name: v${{ env.PLUGIN_VERSION }}
+        tag: v${{ env.PLUGIN_VERSION#v }}
+        release_name: v${{ env.PLUGIN_VERSION#v }}
         overwrite: true
 
   release-finalize:
@@ -148,7 +149,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh release edit "v${{ env.PLUGIN_VERSION }}" --title "v${{ env.PLUGIN_VERSION }}" --notes "Release v${{ env.PLUGIN_VERSION }}" --draft=false --prerelease=false
+        TAG="v${PLUGIN_VERSION#v}"
+        gh release edit "${TAG}" --title "${TAG}" --notes "Release ${TAG}" --draft=false --prerelease=false
 
     - name: Set up Python
       uses: actions/setup-python@v6
