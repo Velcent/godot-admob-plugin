@@ -1,5 +1,5 @@
 ---
-name: admob-cross-platform-sync
+name: sync
 description: Rigorous multi-platform feature synchronization for Godot AdMob. Use when adding or modifying ad formats, consent flows, or bridge methods to ensure GDScript, C#, Android, and iOS implementations are perfectly in sync.
 ---
 

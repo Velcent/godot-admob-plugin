@@ -31,3 +31,4 @@ docs/assets/*.ico
 node_modules/
 dist/
 target/
+*.skill

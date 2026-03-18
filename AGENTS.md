@@ -20,12 +20,19 @@ This file is the authoritative source of truth for ALL AI agents (Gemini, Claude
 - **License Header:** EVERY new file MUST start with the project's MIT License header.
 - **GDScript:** Always use `:=` for type inference. Prefix bridge signals with `_on_admob_`.
 - **C#:** Use PascalCase. Maintain 1:1 parity with the GDScript API.
-- **Cross-Platform Sync:** Follow the protocol in `.github/ai/guides/sync.md`.
+
+## 🔄 Specialized Protocols (Skills)
+When performing these specific tasks, you **MUST** read and follow the specialized guides:
+- **Cross-Platform Sync:** [.github/ai/skills/sync/SKILL.md](.github/ai/skills/sync/SKILL.md)
+- **API Parity Check:** [.github/ai/skills/parity-checker/SKILL.md](.github/ai/skills/parity-checker/SKILL.md)
+- **Release Management:** [.github/ai/skills/release-manager/SKILL.md](.github/ai/skills/release-manager/SKILL.md)
+- **Documentation Sync:** [.github/ai/skills/doc-master/SKILL.md](.github/ai/skills/doc-master/SKILL.md)
 
 ## 🚫 Constraints & Security
 - **Security:** Never log/commit API Keys or `.env` files.
-- **Claude Permissions:** Exclusion is managed via `permissions.deny` in `.claude/settings.json`.
-- **Gemini Ignore:** Respect `.geminiignore` patterns.
+- **Claude:** Exclusion is managed via `permissions.deny` in `.claude/settings.json`.
+- **Gemini:** Respect `.geminiignore` patterns.
+- **Workflow:** Reproduce bugs with a script before implementing a fix. Never stage/commit unless asked.
 
 ## 📋 Pending Tasks
 - Verify iOS runtime behavior for the new warning system.
