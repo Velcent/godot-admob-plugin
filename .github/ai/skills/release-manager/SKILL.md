@@ -14,7 +14,7 @@ Ensure consistency across all platforms and version strings during a release.
 2. **Verify C# Constants**:
    - Check if any C# version constants need updating (usually matches `plugin.cfg`).
 3. **Verify Build Matrix**:
-   - Ensure the latest Godot versions are included in `.github/workflows/release_matrix.yml`.
+   - Ensure the latest Godot versions are included in `.github/workflows/cd-build-and-release.yml`.
 4. **Changelog Generation**:
    - Run `git log $(git describe --tags --abbrev=0)..HEAD --oneline` to gather changes.
    - Categorize into `feat`, `fix`, and `chore`.
@@ -22,9 +22,9 @@ Ensure consistency across all platforms and version strings during a release.
 ## 🛠️ Release Execution
 
 1. **Trigger Workflow**:
-   - If manual release: Go to GitHub Actions -> `Manual Release Version` -> `Run workflow`.
+   - Go to GitHub Actions -> `Build and Release` -> `Run workflow`.
 2. **Validate Assets**:
-   - Once the `Built Plugin Release` workflow finishes, verify that the following assets exist:
+   - Once the workflow finishes, verify that the following assets exist:
      - `poing-godot-admob-vX.Y.Z.zip` (Godot Editor Plugin).
      - `poing-godot-admob-android-v*.zip` (Android Templates).
      - `poing-godot-admob-ios-v*.zip` (iOS Templates).

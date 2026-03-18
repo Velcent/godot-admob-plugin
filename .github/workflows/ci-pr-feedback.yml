@@ -1,8 +1,8 @@
-name: PR Comment
+name: "CI: PR Feedback"
 
 on:
   workflow_run:
-    workflows: ["PR Checks"]
+    workflows: ["CI: PR Validation"]
     types: [completed]
 
 jobs:

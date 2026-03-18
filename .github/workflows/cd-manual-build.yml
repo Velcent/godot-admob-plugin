@@ -1,4 +1,4 @@
-name: Manual Build (Target Godot Version)
+name: "CD: Manual Build (Target Godot Version)"
 
 on:
   workflow_dispatch:

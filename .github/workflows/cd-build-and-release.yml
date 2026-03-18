@@ -1,4 +1,4 @@
-name: Built Plugin Release
+name: Build and Release
 
 on: workflow_dispatch
 
@@ -132,16 +132,38 @@ jobs:
         release_name: ${{ env.PLUGIN_VERSION }}
         overwrite: true
 
-  release-notes:
-    name: Generate Release Notes
+  release-finalize:
+    name: Finalize Release and Publish
     needs: [android-template, ios-template, godot_editor]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
 
-    - name: Set version & create release properly
+    - name: Set plugin version
+      run: |
+        VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
+        echo "PLUGIN_VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Edit release info
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        PLUGIN_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
-        gh release edit "v${PLUGIN_VERSION}" --title "v${PLUGIN_VERSION}" --notes "" --draft=false --prerelease=false
+        gh release edit "v${{ env.PLUGIN_VERSION }}" --title "v${{ env.PLUGIN_VERSION }}" --notes "Release v${{ env.PLUGIN_VERSION }}" --draft=false --prerelease=false
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.8'
+
+    - name: Install requests
+      run: pip install requests
+      
+    - name: Upload to Godot Asset Library
+      env:
+        USERNAME: ${{ secrets.ASSET_LIBRARY_USERNAME }}
+        PASSWORD: ${{ secrets.ASSET_LIBRARY_PASSWORD }}
+        VERSION: ${{ env.PLUGIN_VERSION }}
+        COMMIT_HASH: ${{ github.sha }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+      run: |
+        python3 .github/scripts/push.py
