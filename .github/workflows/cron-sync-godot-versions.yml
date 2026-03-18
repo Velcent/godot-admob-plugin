@@ -63,15 +63,15 @@ jobs:
 
     - name: Set plugin version
       run: |
-        PLUGIN_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
-        echo "PLUGIN_VERSION=${PLUGIN_VERSION}" >> $GITHUB_ENV
+        RAW_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
+        echo "PLUGIN_TAG=v${RAW_VERSION#v}" >> $GITHUB_ENV
 
     - name: Upload binary
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/android/.output/poing-godot-admob-android-v${{ needs.detect-latest.outputs.godot_version }}.zip
-        tag: v${{ env.PLUGIN_VERSION#v }}
+        tag: ${{ env.PLUGIN_TAG }}
         overwrite: true
 
   ios:
@@ -92,8 +92,8 @@ jobs:
 
     - name: Set plugin version
       run: |
-        PLUGIN_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
-        echo "PLUGIN_VERSION=${PLUGIN_VERSION}" >> $GITHUB_ENV
+        RAW_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
+        echo "PLUGIN_TAG=v${RAW_VERSION#v}" >> $GITHUB_ENV
 
     - name: Upload binary
       uses: svenstaro/upload-release-action@v2
@@ -101,5 +101,5 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/ios/bin/release/*.zip
         file_glob: true
-        tag: v${{ env.PLUGIN_VERSION#v }}
+        tag: ${{ env.PLUGIN_TAG }}
         overwrite: true

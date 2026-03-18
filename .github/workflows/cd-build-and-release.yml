@@ -11,19 +11,18 @@ jobs:
 
     - name: Set plugin version
       run: |
-        PLUGIN_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
-        echo "PLUGIN_VERSION=${PLUGIN_VERSION}" >> $GITHUB_ENV
+        RAW_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
+        echo "PLUGIN_TAG=v${RAW_VERSION#v}" >> $GITHUB_ENV
 
     - name: Fail if release already exists
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        TAG="v${PLUGIN_VERSION#v}"
-        if gh api "repos/${{ github.repository }}/releases/tags/${TAG}" > /dev/null 2>&1; then
-          echo "::error::Release ${TAG} already exists. Bump the version before releasing."
+        if gh api "repos/${{ github.repository }}/releases/tags/${{ env.PLUGIN_TAG }}" > /dev/null 2>&1; then
+          echo "::error::Release ${{ env.PLUGIN_TAG }} already exists. Bump the version before releasing."
           exit 1
         fi
-        echo "No existing release found for ${TAG}. Proceeding..."
+        echo "No existing release found for ${{ env.PLUGIN_TAG }}. Proceeding..."
 
   android-template:
     name: Compiling Android (Godot ${{matrix.GODOT_VERSIONS}})
@@ -38,8 +37,8 @@ jobs:
 
     - name: Set plugin version
       run: |
-        PLUGIN_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
-        echo "PLUGIN_VERSION=${PLUGIN_VERSION}" >> $GITHUB_ENV
+        RAW_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
+        echo "PLUGIN_TAG=v${RAW_VERSION#v}" >> $GITHUB_ENV
 
     - name: Build Plugins
       working-directory: platforms/android
@@ -58,8 +57,8 @@ jobs:
         target_commit: ${{ github.ref_name }}
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/android/.output/poing-godot-admob-android-v${{matrix.GODOT_VERSIONS}}.zip
-        tag: v${{env.PLUGIN_VERSION#v}}
-        release_name: v${{env.PLUGIN_VERSION#v}}
+        tag: ${{ env.PLUGIN_TAG }}
+        release_name: ${{ env.PLUGIN_TAG }}
         overwrite: true
 
   ios-template:
@@ -75,8 +74,8 @@ jobs:
 
     - name: Set plugin version
       run: |
-        PLUGIN_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
-        echo "PLUGIN_VERSION=${PLUGIN_VERSION}" >> $GITHUB_ENV
+        RAW_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
+        echo "PLUGIN_TAG=v${RAW_VERSION#v}" >> $GITHUB_ENV
 
     - name: Verify matrix
       run: |
@@ -104,8 +103,8 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/ios/bin/release/*.zip
         file_glob: true
-        tag: v${{env.PLUGIN_VERSION#v}}
-        release_name: v${{env.PLUGIN_VERSION#v}}
+        tag: ${{ env.PLUGIN_TAG }}
+        release_name: ${{ env.PLUGIN_TAG }}
         overwrite: true
 
   godot_editor:
@@ -118,10 +117,11 @@ jobs:
     - name: Compress Godot Editor Plugin
       working-directory: platforms/godot_editor
       run: |
-        PLUGIN_VERSION=$(grep "version=" addons/admob/plugin.cfg | cut -d'"' -f2)
-        zip -r "poing-godot-admob-v${PLUGIN_VERSION}.zip" addons/admob
-        echo "ZIP_NAME=poing-godot-admob-v${PLUGIN_VERSION}.zip" >> $GITHUB_ENV
-        echo "PLUGIN_VERSION=${PLUGIN_VERSION}" >> $GITHUB_ENV
+        RAW_VERSION=$(grep "version=" addons/admob/plugin.cfg | cut -d'"' -f2)
+        CH_VERSION=${RAW_VERSION#v}
+        zip -r "poing-godot-admob-v${CH_VERSION}.zip" addons/admob
+        echo "ZIP_NAME=poing-godot-admob-v${CH_VERSION}.zip" >> $GITHUB_ENV
+        echo "PLUGIN_TAG=v${CH_VERSION}" >> $GITHUB_ENV
 
     - name: Upload zip to release
       uses: svenstaro/upload-release-action@v2
@@ -129,8 +129,8 @@ jobs:
         target_commit: ${{ github.ref_name }}
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: platforms/godot_editor/${{ env.ZIP_NAME }}
-        tag: v${{ env.PLUGIN_VERSION#v }}
-        release_name: v${{ env.PLUGIN_VERSION#v }}
+        tag: ${{ env.PLUGIN_TAG }}
+        release_name: ${{ env.PLUGIN_TAG }}
         overwrite: true
 
   release-finalize:
@@ -142,15 +142,14 @@ jobs:
 
     - name: Set plugin version
       run: |
-        VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
-        echo "PLUGIN_VERSION=$VERSION" >> $GITHUB_ENV
+        RAW_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
+        echo "PLUGIN_TAG=v${RAW_VERSION#v}" >> $GITHUB_ENV
 
     - name: Edit release info
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        TAG="v${PLUGIN_VERSION#v}"
-        gh release edit "${TAG}" --title "${TAG}" --notes "Release ${TAG}" --draft=false --prerelease=false
+        gh release edit "${{ env.PLUGIN_TAG }}" --title "${{ env.PLUGIN_TAG }}" --notes "Release ${{ env.PLUGIN_TAG }}" --draft=false --prerelease=false
 
     - name: Set up Python
       uses: actions/setup-python@v6
@@ -164,7 +163,7 @@ jobs:
       env:
         USERNAME: ${{ secrets.ASSET_LIBRARY_USERNAME }}
         PASSWORD: ${{ secrets.ASSET_LIBRARY_PASSWORD }}
-        VERSION: v${{ env.PLUGIN_VERSION }}
+        VERSION: ${{ env.PLUGIN_TAG }}
         COMMIT_HASH: ${{ github.sha }}
         GITHUB_REPOSITORY: ${{ github.repository }}
       run: |
