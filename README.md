@@ -31,9 +31,9 @@
 <details>
 <summary><b>Manual installation for custom versions</b></summary>
 
-1. Pick a [specific version](https://github.com/poingstudios/godot-admob-editor/tags) from tags.
-2. Download and extract as a `.zip` or `.tar.gz`.
-3. Copy the extracted `addons/admob` folder into `res://addons` in your project.
+1. Pick a [specific version](https://github.com/poingstudios/godot-admob-plugin/releases) from tags.
+2. Download the `poing-godot-admob-v*.zip` file from the assets.
+3. Extract the ZIP file in the root of your project.
 
 </details>
 
