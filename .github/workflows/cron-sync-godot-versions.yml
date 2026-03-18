@@ -1,4 +1,4 @@
-name: "[Cron] 🔄 Sync Godot Versions"
+name: "[Cron] Sync Godot Versions"
 
 on:
   schedule:

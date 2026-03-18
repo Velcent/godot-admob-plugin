@@ -1,4 +1,4 @@
-name: "[CD] 📚 Deploy Documentation"
+name: "[CD] Deploy Documentation"
 on:
   push:
     branches:
@@ -6,7 +6,7 @@ on:
     tags:
       - '*'
   workflow_run:
-    workflows: ["Build and Release"]
+    workflows: ["[Manual] Release All Platforms"]
     types:
       - completed
 

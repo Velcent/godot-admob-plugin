@@ -1,4 +1,4 @@
-name: "[Manual] 🚀 Release All Platforms"
+name: "[Manual] Release All Platforms"
 
 on: workflow_dispatch
 
@@ -161,8 +161,8 @@ jobs:
       
     - name: Upload to Godot Asset Library
       env:
-        USERNAME: ${{ secrets.ASSET_LIBRARY_USERNAME }}
-        PASSWORD: ${{ secrets.ASSET_LIBRARY_PASSWORD }}
+        ASSET_LIB_USER: ${{ secrets.ASSET_LIBRARY_USERNAME }}
+        ASSET_LIB_PASS: ${{ secrets.ASSET_LIBRARY_PASSWORD }}
         VERSION: ${{ env.PLUGIN_TAG }}
         COMMIT_HASH: ${{ github.sha }}
         GITHUB_REPOSITORY: ${{ github.repository }}

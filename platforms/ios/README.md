@@ -10,24 +10,24 @@
 <h4 align="center">A Godot's plugin for iOS of <a href="https://admob.google.com" target="_blank">AdMob</a>.</h4>
 
 <p align="center">
-  <a href="https://github.com/PoingStudios/godot-admob-ios/releases">
-    <img src="https://img.shields.io/github/v/tag/PoingStudios/godot-admob-ios?label=Version">
+  <a href="https://github.com/poingstudios/godot-admob-ios/releases">
+    <img src="https://img.shields.io/github/v/tag/poingstudios/godot-admob-ios?label=Version">
   </a>
-  <a href="https://github.com/PoingStudios/godot-admob-ios/actions/workflows/release_ios.yml">
-    <img src="https://github.com/PoingStudios/godot-admob-ios/actions/workflows/release_ios.yml/badge.svg">
+  <a href="https://github.com/poingstudios/godot-admob-ios/actions/workflows/release_ios.yml">
+    <img src="https://github.com/poingstudios/godot-admob-ios/actions/workflows/release_ios.yml/badge.svg">
   </a>
-  <a href="https://github.com/PoingStudios/godot-admob-ios/releases">
-    <img src="https://img.shields.io/github/downloads/PoingStudios/godot-admob-ios/total?style=social">
+  <a href="https://github.com/poingstudios/godot-admob-plugin/releases">
+    <img src="https://img.shields.io/github/downloads/poingstudios/godot-admob-plugin/total?style=social">
   </a>
-  <img src="https://img.shields.io/github/stars/PoingStudios/godot-admob-ios?style=social">
-  <img src="https://img.shields.io/github/license/PoingStudios/godot-admob-ios?style=plastic">
+  <img src="https://img.shields.io/github/stars/poingstudios/godot-admob-ios?style=social">
+  <img src="https://img.shields.io/github/license/poingstudios/godot-admob-ios?style=plastic">
 </p>
 
 <p align="center">
   <a href="#❓-about">About</a> •
   <a href="#🙋‍♂️how-to-use">How to use</a> •
   <a href="#📄documentation">Docs</a> •
-  <a href="https://github.com/PoingStudios/godot-admob-ios/releases">Downloads</a> 
+  <a href="https://github.com/poingstudios/godot-admob-plugin/releases">Downloads</a> 
 </p>
 
 ## ❓ About 
@@ -38,7 +38,7 @@
 
 This repository is for a _Godot Engine Plugin_ that allows showing the ads offered by **AdMob** in an **easy** way, without worrying about the building or version, **just download and use**.
 
-The **purpose** of this plugin is to always keep **up to date with Godot**, supporting **ALMOST ALL** versions from v4.1+, and also make the code **compatible** on **[Android](https://github.com/PoingStudios/godot-admob-android) and iOS**, so each advertisement will work **identically on both systems**.
+The **purpose** of this plugin is to always keep **up to date with Godot**, supporting **ALMOST ALL** versions from v4.1+, and also make the code **compatible** on **[Android](https://github.com/poingstudios/godot-admob-android) and iOS**, so each advertisement will work **identically on both systems**.
 
 ### 🔑 Key features
 
@@ -49,17 +49,17 @@ The **purpose** of this plugin is to always keep **up to date with Godot**, supp
 - Targeting Capabilities. 🎯
 - Seamless integration with Mediation partners: **Meta**, **Vungle**. 💰
 - CI/CD for streamlined development and deployment. 🔄🚀
-- Features a dedicated [Godot Plugin](https://github.com/PoingStudios/godot-admob-plugin), reducing the need for extensive coding. 🔌
-- There is also an [Android Plugin](https://github.com/PoingStudios/godot-admob-android) available, which has the same behavior. 🤖
+- Features a dedicated [Godot Plugin](https://github.com/poingstudios/godot-admob-plugin), reducing the need for extensive coding. 🔌
+- There is also an [Android Plugin](https://github.com/poingstudios/godot-admob-android) available, which has the same behavior. 🤖
 
 ## 🙋‍♂️How to use 
-- We recommend you to use the [AdMob Plugin](https://github.com/PoingStudios/godot-admob-plugin), you can download direcly from [Godot Assets](https://godotengine.org/asset-library/asset/2063).
-- After download, we recommend you to read the [README.md](https://github.com/PoingStudios/godot-admob-plugin/blob/master/README.md) of the Plugin to know how to use.
+- We recommend you to use the [AdMob Plugin](https://github.com/poingstudios/godot-admob-plugin), you can download direcly from [Godot Assets](https://godotengine.org/asset-library/asset/2063).
+- After download, we recommend you to read the [README.md](https://github.com/poingstudios/godot-admob-plugin/blob/master/README.md) of the Plugin to know how to use.
 
 ## 📦Installing:
 
 ### 📥Download
-- To get started, download the `poing-godot-admob-ios-v{{ your_godot_version }}.zip` file from the [releases tab](https://github.com/poingstudios/godot-admob-plugin/releases). You can also use the [AdMob Plugin](https://github.com/PoingStudios/godot-admob-plugin) for this step by navigating to `Project -> Tools -> AdMob Manager -> iOS -> Download & Install`.
+- To get started, download the `poing-godot-admob-ios-v{{ your_godot_version }}.zip` file from the [releases tab](https://github.com/poingstudios/godot-admob-plugin/releases). You can also use the [AdMob Plugin](https://github.com/poingstudios/godot-admob-plugin) for this step by navigating to `Project -> Tools -> AdMob Manager -> iOS -> Download & Install`.
 
 
 ### 🧑‍💻Usage
@@ -70,9 +70,9 @@ The **purpose** of this plugin is to always keep **up to date with Godot**, supp
 - **That's it!** The plugin now uses `.xcframework` bundles that are automatically integrated by Godot. No manual Xcode steps or CocoaPods commands are required.
 
 ## 📎Useful links:
-- 🦾 Godot Plugin: https://github.com/PoingStudios/godot-admob-plugin
-- 🤖 Android: https://github.com/PoingStudios/godot-admob-android
-- ⏳ Plugin for Godot below v4.1: https://github.com/PoingStudios/godot-admob-ios/tree/v2
+- 🦾 Godot Plugin: https://github.com/poingstudios/godot-admob-plugin
+- 🤖 Android: https://github.com/poingstudios/godot-admob-android
+- ⏳ Plugin for Godot below v4.1: https://github.com/poingstudios/godot-admob-ios/tree/v2
 
 ## 📄Documentation
 For a complete documentation of this Plugin: [check here](https://poingstudios.github.io/godot-admob-plugin/).
@@ -92,11 +92,11 @@ Your support helps us continue to improve and maintain this plugin. Thank you fo
 
 
 ## 🆘Getting help
-[![DISCUSSIONS](https://img.shields.io/badge/Discussions-green?style=for-the-badge)](https://github.com/PoingStudios/godot-admob-ios/discussions)
+[![DISCUSSIONS](https://img.shields.io/badge/Discussions-green?style=for-the-badge)](https://github.com/poingstudios/godot-admob-ios/discussions)
 [![DISCORD](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge)](https://discord.com/invite/YEPvYjSSMk)
 
 
 ## ⭐ Star History
 If you appreciate our work, don't forget to give us a star on GitHub! ⭐
 
-![Star History Chart](https://api.star-history.com/svg?repos=Poingstudios/godot-admob-ios&type=Date)
+![Star History Chart](https://api.star-history.com/svg?repos=poingstudios/godot-admob-ios&type=Date)
