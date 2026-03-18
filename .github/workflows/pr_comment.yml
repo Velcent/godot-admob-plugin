@@ -30,10 +30,10 @@ jobs:
       uses: actions/github-script@v7
       with:
         script: |
-          const prNumber = ${{ steps.pr.outputs.number }};
+          const prNumber = parseInt('${{ steps.pr.outputs.number }}');
           if (!prNumber) return;
 
-          const runId = ${{ github.event.workflow_run.id }};
+          const runId = parseInt('${{ github.event.workflow_run.id }}');
           const commitSha = '${{ github.event.workflow_run.head_sha }}'.substring(0, 7);
 
           const { data: artifacts } = await github.rest.actions.listWorkflowRunArtifacts({
@@ -67,10 +67,10 @@ jobs:
       uses: actions/github-script@v7
       with:
         script: |
-          const prNumber = ${{ steps.pr.outputs.number }};
+          const prNumber = parseInt('${{ steps.pr.outputs.number }}');
           if (!prNumber) return;
 
-          const runId = ${{ github.event.workflow_run.id }};
+          const runId = parseInt('${{ github.event.workflow_run.id }}');
           const commitSha = '${{ github.event.workflow_run.head_sha }}'.substring(0, 7);
           const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}`;
 
