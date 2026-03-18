@@ -21,34 +21,36 @@
 # SOFTWARE.
 
 static func manage_visibility(editor_plugin: EditorPlugin = null) -> void:
-	var is_csharp_project := false
 	var is_mono_version := ClassDB.class_exists("CSharpScript")
+	var is_csharp_project := false
 	
+	# Check for .csproj files in the root
 	var files := DirAccess.get_files_at("res://")
 	for file in files:
-		if file.get_extension() == "csproj":
+		if file.get_extension() == "csproj" or file.get_extension() == "sln":
 			is_csharp_project = true
 			break
 	
 	var csharp_gdignore_path := "res://addons/admob/csharp/.gdignore"
 	var should_hide := not is_mono_version or not is_csharp_project
+	var file_system_modified := false
 	
 	if not should_hide:
+		# Show folder
 		if FileAccess.file_exists(csharp_gdignore_path):
-			var error := DirAccess.remove_absolute(csharp_gdignore_path)
-			if error == OK:
-				print("AdMob: C# project detected, .gdignore removed.")
-				_refresh_filesystem(editor_plugin, csharp_gdignore_path)
-			else:
-				print("AdMob: Failed to remove .gdignore: ", error)
+			DirAccess.remove_absolute(csharp_gdignore_path)
+			file_system_modified = true
 	else:
+		# Hide folder
 		if not FileAccess.file_exists(csharp_gdignore_path):
 			var file := FileAccess.open(csharp_gdignore_path, FileAccess.WRITE)
 			if file:
 				file.store_string("")
 				file.close()
-				print("AdMob: .gdignore created to hide C# folder.")
-				_refresh_filesystem(editor_plugin, csharp_gdignore_path)
+				file_system_modified = true
+
+	if file_system_modified and editor_plugin:
+		_refresh_filesystem(editor_plugin, csharp_gdignore_path)
 
 static func _refresh_filesystem(editor_plugin: EditorPlugin = null, file_path: String = "") -> void:
 	if not editor_plugin:
@@ -57,9 +59,14 @@ static func _refresh_filesystem(editor_plugin: EditorPlugin = null, file_path: S
 	var filesystem := editor_plugin.get_editor_interface().get_resource_filesystem()
 	if not filesystem:
 		return
-		
-	if file_path != "":
-		filesystem.update_file(file_path)
 	
-	# Delaying the scan slightly or using call_deferred helps with initial project load conflicts
-	filesystem.call_deferred("scan")
+	# Always update the specific file so the internal state changes
+	filesystem.update_file(file_path)
+	
+	# Delay the scan to avoid collisions with the "project reload" tasks or first-time scans.
+	# We don't check frames_drawn anymore to ensure it ALWAYS happens even on startup.
+	var timer := editor_plugin.get_tree().create_timer(1.0)
+	timer.timeout.connect(func():
+		if filesystem and not filesystem.is_scanning():
+			filesystem.scan()
+	)
