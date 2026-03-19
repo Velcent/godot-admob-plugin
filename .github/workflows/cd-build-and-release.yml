@@ -149,7 +149,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh release edit "${{ env.PLUGIN_TAG }}" --title "${{ env.PLUGIN_TAG }}" --notes "Release ${{ env.PLUGIN_TAG }}" --draft=false --prerelease=false
+        gh release edit "${{ env.PLUGIN_TAG }}" --title "${{ env.PLUGIN_TAG }}" --generate-notes --draft=false --prerelease=false
 
     - name: Set up Python
       uses: actions/setup-python@v6
