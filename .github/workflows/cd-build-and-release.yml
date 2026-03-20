@@ -110,13 +110,7 @@ jobs:
     - uses: actions/checkout@v6
 
     - name: Compress Godot Editor Plugin
-      working-directory: platforms/godot_editor
-      run: |
-        RAW_VERSION=$(grep "version=" addons/admob/plugin.cfg | cut -d'"' -f2)
-        CH_VERSION=${RAW_VERSION#v}
-        zip -r "poing-godot-admob-v${CH_VERSION}.zip" addons
-        echo "ZIP_NAME=poing-godot-admob-v${CH_VERSION}.zip" >> $GITHUB_ENV
-        echo "PLUGIN_TAG=v${CH_VERSION}" >> $GITHUB_ENV
+      run: ./.github/scripts/compress_editor_plugin.sh
 
     - name: Upload zip to artifact
       uses: actions/upload-artifact@v4
