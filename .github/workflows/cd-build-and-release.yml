@@ -51,15 +51,13 @@ jobs:
       run: |
         ./gradlew zipPlugins -PgodotVersion="${{matrix.GODOT_VERSIONS}}"
 
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v2
+    - name: Upload binaries to artifact
+      uses: actions/upload-artifact@v4
       with:
-        target_commit: ${{ github.ref_name }}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: platforms/android/.output/poing-godot-admob-android-v${{matrix.GODOT_VERSIONS}}.zip
-        tag: ${{ env.PLUGIN_TAG }}
-        release_name: ${{ env.PLUGIN_TAG }}
-        overwrite: true
+        name: android-${{matrix.GODOT_VERSIONS}}
+        path: platforms/android/.output/poing-godot-admob-android-v${{matrix.GODOT_VERSIONS}}.zip
+        if-no-files-found: error
+        retention-days: 1
 
   ios-template:
     name: Compiling iOS (Godot ${{matrix.GODOT_VERSIONS}})
@@ -96,16 +94,13 @@ jobs:
       run: |
         ./scripts/build.sh ${{env.CURRENT_GODOT_VERSION}}
 
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v2
+    - name: Upload binaries to artifact
+      uses: actions/upload-artifact@v4
       with:
-        target_commit: ${{ github.ref_name }}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: platforms/ios/bin/release/*.zip
-        file_glob: true
-        tag: ${{ env.PLUGIN_TAG }}
-        release_name: ${{ env.PLUGIN_TAG }}
-        overwrite: true
+        name: ios-${{matrix.GODOT_VERSIONS}}
+        path: platforms/ios/bin/release/*.zip
+        if-no-files-found: error
+        retention-days: 1
 
   godot_editor:
     name: Compiling Godot Editor Plugin
@@ -123,15 +118,13 @@ jobs:
         echo "ZIP_NAME=poing-godot-admob-v${CH_VERSION}.zip" >> $GITHUB_ENV
         echo "PLUGIN_TAG=v${CH_VERSION}" >> $GITHUB_ENV
 
-    - name: Upload zip to release
-      uses: svenstaro/upload-release-action@v2
+    - name: Upload zip to artifact
+      uses: actions/upload-artifact@v4
       with:
-        target_commit: ${{ github.ref_name }}
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: platforms/godot_editor/${{ env.ZIP_NAME }}
-        tag: ${{ env.PLUGIN_TAG }}
-        release_name: ${{ env.PLUGIN_TAG }}
-        overwrite: true
+        name: godot-editor
+        path: platforms/godot_editor/${{ env.ZIP_NAME }}
+        if-no-files-found: error
+        retention-days: 1
 
   release-finalize:
     name: "🚀 Finalize and Publish Release"
@@ -145,11 +138,17 @@ jobs:
         RAW_VERSION=$(grep "version=" platforms/godot_editor/addons/admob/plugin.cfg | cut -d'"' -f2)
         echo "PLUGIN_TAG=v${RAW_VERSION#v}" >> $GITHUB_ENV
 
-    - name: Edit release info
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: release-artifacts
+        merge-multiple: true
+
+    - name: Finalize and Generate Release Notes
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh release edit "${{ env.PLUGIN_TAG }}" --title "${{ env.PLUGIN_TAG }}" --generate-notes --draft=false --prerelease=false
+        gh release create ${{ env.PLUGIN_TAG }} release-artifacts/* --title "${{ env.PLUGIN_TAG }}" --generate-notes
 
     - name: Set up Python
       uses: actions/setup-python@v6
