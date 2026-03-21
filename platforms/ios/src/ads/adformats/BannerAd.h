@@ -46,6 +46,7 @@ enum class AdPosition {
 @property (nonatomic) int customX;
 @property (nonatomic) int customY;
 @property (nonatomic) BOOL isHidden;
+@property (nonatomic, strong) NSMutableArray<NSLayoutConstraint *> *activeConstraints;
 
 - (instancetype)initWithUID:(int)UID adViewDictionary:(Dictionary)adViewDictionary;
 - (void)loadAd:(GADRequest *)request;

@@ -34,7 +34,7 @@ public partial class Banner : VBoxContainer
 	private string AdUnitId => OS.GetName() == "iOS" ? AdUnitIdIos : AdUnitIdAndroid;
 
 	private AdView _adView;
-	private AdPosition _currentPosition = AdPosition.Bottom;
+	private AdPosition _currentPosition = AdPosition.Top;
 
 	private Button _loadBtn;
 	private Button _destroyBtn;
@@ -61,6 +61,9 @@ public partial class Banner : VBoxContainer
 
 		_xValue = GetNode<LineEdit>("%XValue");
 		_yValue = GetNode<LineEdit>("%YValue");
+		
+		_xValue.TextSubmitted += _ => OnApplyCustomPressed();
+		_yValue.TextSubmitted += _ => OnApplyCustomPressed();
 
 		var applyCustomBtn = GetNode<Button>("CustomCard/VBox/HBox/ApplyCustom");
 		applyCustomBtn.Pressed += OnApplyCustomPressed;
@@ -102,6 +105,7 @@ public partial class Banner : VBoxContainer
 		if (int.TryParse(_xValue.Text, out int x) && int.TryParse(_yValue.Text, out int y))
 		{
 			SetPosition(AdPosition.Custom(x, y));
+			DisplayServer.VirtualKeyboardHide();
 		}
 	}
 

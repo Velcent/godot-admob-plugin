@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -28,9 +28,11 @@
            adViewDictionary:(Dictionary)adViewDictionary {
   if ((self = [super init])) {
     self.UID = [NSNumber numberWithInt:UID];
-    
-    self.adPosition = [NSNumber numberWithInt:(int)adViewDictionary["ad_position"]];
-    Dictionary customPositionDictionary = (Dictionary)adViewDictionary["custom_position"];
+
+    self.adPosition =
+        [NSNumber numberWithInt:(int)adViewDictionary["ad_position"]];
+    Dictionary customPositionDictionary =
+        (Dictionary)adViewDictionary["custom_position"];
     self.customX = (int)customPositionDictionary["x"];
     self.customY = (int)customPositionDictionary["y"];
 
@@ -40,6 +42,7 @@
         [GodotDictionaryToObject convertDictionaryToGADAdSize:adSizeDictionary];
 
     self.bannerView = [[GADBannerView alloc] initWithAdSize:adSize];
+    self.activeConstraints = [NSMutableArray array];
     [self addBannerViewToView:self.bannerView];
 
     UIViewController *rootViewController =
@@ -107,9 +110,9 @@
 
   int posInt = [self.adPosition intValue];
   if (posInt == -1) {
-      [self updateBannerPositionForCustomPositionX:self.customX y:self.customY];
+    [self updateBannerPositionForCustomPositionX:self.customX y:self.customY];
   } else {
-      [self updateBannerPositionForAdPosition:static_cast<AdPosition>(posInt)];
+    [self updateBannerPositionForAdPosition:static_cast<AdPosition>(posInt)];
   }
 }
 
@@ -126,18 +129,22 @@
     return;
   }
 
-  [window
-      addConstraint:[NSLayoutConstraint constraintWithItem:self.bannerView
+  NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.bannerView
                                                  attribute:attribute
                                                  relatedBy:NSLayoutRelationEqual
                                                     toItem:toView
                                                  attribute:attribute
                                                 multiplier:1
-                                                  constant:0]];
+                                                  constant:0];
+  constraint.active = YES;
+  [self.activeConstraints addObject:constraint];
 }
 
 - (void)updateBannerPositionForAdPosition:(AdPosition)adPosition {
-  NSLog(@"ADPOSITION: %i", adPosition);
+  NSLog(@"PoingGodotAdMob: Updating to AdPosition: %i", adPosition);
+  NSLog(@"PoingGodotAdMob: Banner View bounds: %@, frame: %@",
+        NSStringFromCGRect(self.bannerView.bounds),
+        NSStringFromCGRect(self.bannerView.frame));
 
   UIWindow *window = [WindowHelper getCurrentWindow];
 
@@ -146,7 +153,8 @@
     return;
   }
 
-  [window removeConstraints:self.bannerView.constraints];
+  [NSLayoutConstraint deactivateConstraints:self.activeConstraints];
+  [self.activeConstraints removeAllObjects];
 
   // Use the window's safe area layout guide (iOS 11+)
   UILayoutGuide *safeArea = window.safeAreaLayoutGuide;
@@ -202,13 +210,16 @@
   }
 
   [window layoutIfNeeded];
+  NSLog(@"PoingGodotAdMob: Layout updated. New frame: %@",
+        NSStringFromCGRect(self.bannerView.frame));
 }
 
 - (void)updateBannerPositionForCustomPositionX:(int)x y:(int)y {
+  NSLog(@"PoingGodotAdMob: Updating to Custom Position: x=%i, y=%i", x, y);
   self.adPosition = [NSNumber numberWithInt:-1];
   self.customX = x;
   self.customY = y;
-  
+
   UIWindow *window = [WindowHelper getCurrentWindow];
 
   if (!window) {
@@ -216,7 +227,8 @@
     return;
   }
 
-  [window removeConstraints:self.bannerView.constraints];
+  [NSLayoutConstraint deactivateConstraints:self.activeConstraints];
+  [self.activeConstraints removeAllObjects];
 
   [self addConstraintForBannerView:NSLayoutAttributeLeft
                             toView:window
@@ -242,14 +254,15 @@
     return;
   }
 
-  [window
-      addConstraint:[NSLayoutConstraint constraintWithItem:self.bannerView
+  NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self.bannerView
                                                  attribute:attribute
                                                  relatedBy:NSLayoutRelationEqual
                                                     toItem:toView
                                                  attribute:attribute
                                                 multiplier:1
-                                                  constant:constant]];
+                                                  constant:constant];
+  constraint.active = YES;
+  [self.activeConstraints addObject:constraint];
 }
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
