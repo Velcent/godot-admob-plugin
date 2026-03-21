@@ -45,7 +45,7 @@ import org.godotengine.godot.plugin.SignalInfo
 class Banner(
         uid: Int,
         activity: Activity,
-        val godotLayout: FrameLayout,
+        godotLayout: FrameLayout,
         godot: Godot,
         private val pluginName: String,
         adViewDictionary: Dictionary
@@ -184,12 +184,9 @@ class Banner(
         val bottomInset = activity.window.decorView.height - safeArea.bottom
 
         if (mPosition.value == null) {
-            val location = IntArray(2)
-            godotLayout.getLocationOnScreen(location)
-
             val density = activity.resources.displayMetrics.density
-            layoutParams.leftMargin = (mPosition.customX * density).toInt() - location[0]
-            layoutParams.topMargin = (mPosition.customY * density).toInt() - location[1]
+            layoutParams.leftMargin = (mPosition.customX * density).toInt()
+            layoutParams.topMargin = (mPosition.customY * density).toInt()
             layoutParams.rightMargin = 0
             layoutParams.bottomMargin = 0
         } else {
