@@ -26,15 +26,21 @@ const Registry = preload("res://addons/admob/internal/sample_registry.gd")
 
 var _ad_view: AdView
 var _ad_listener := AdListener.new()
-var _ad_position := AdPosition.Values.TOP
+var _ad_position := AdPosition.TOP
 
-@onready var _load_button: Button = $BannerActions/LoadBanner
-@onready var _destroy_button: Button = $BannerActions/DestroyBanner
-@onready var _show_button: Button = $BannerActions/ShowBanner
-@onready var _hide_button: Button = $BannerActions/HideBanner
-@onready var _get_size_button: Button = $BannerActions/GetSize
+@onready var _load_button: Button = $ActionsCard/VBox/BannerActions/LoadBanner
+@onready var _destroy_button: Button = $ActionsCard/VBox/BannerActions/DestroyBanner
+@onready var _show_button: Button = $ActionsCard/VBox/BannerActions/ShowBanner
+@onready var _hide_button: Button = $ActionsCard/VBox/BannerActions/HideBanner
+@onready var _get_size_button: Button = $ActionsCard/VBox/BannerActions/GetSize
+@onready var _x_value: LineEdit = %XValue
+@onready var _y_value: LineEdit = %YValue
 
 func _ready() -> void:
+	# Conecta o sinal de texto submetido (Enter ou "Confirmar" no teclado mobile)
+	_x_value.text_submitted.connect(func(_text): _on_apply_custom_pressed())
+	_y_value.text_submitted.connect(func(_text): _on_apply_custom_pressed())
+	
 	_ad_listener.on_ad_failed_to_load = _on_ad_failed_to_load
 	_ad_listener.on_ad_clicked = _on_ad_clicked
 	_ad_listener.on_ad_closed = _on_ad_closed
@@ -44,11 +50,11 @@ func _ready() -> void:
 	_update_ui_state(false)
 
 func _update_ui_state(is_loaded: bool) -> void:
-	_load_button.disabled = is_loaded
-	_destroy_button.disabled = !is_loaded
-	_show_button.disabled = !is_loaded
-	_hide_button.disabled = !is_loaded
-	_get_size_button.disabled = !is_loaded
+	if is_instance_valid(_load_button): _load_button.disabled = is_loaded
+	if is_instance_valid(_destroy_button): _destroy_button.disabled = !is_loaded
+	if is_instance_valid(_show_button): _show_button.disabled = !is_loaded
+	if is_instance_valid(_hide_button): _hide_button.disabled = !is_loaded
+	if is_instance_valid(_get_size_button): _get_size_button.disabled = !is_loaded
 
 func _on_load_banner_pressed() -> void:
 	if _ad_view:
@@ -95,6 +101,15 @@ func _on_get_size_pressed() -> void:
 		]
 		_log(info)
 
+func _on_apply_custom_pressed() -> void:
+	var x = int(_x_value.text)
+	var y = int(_y_value.text)
+	_log("Applying custom position: (%d, %d)" % [x, y])
+	_update_position(AdPosition.custom(x, y))
+	
+	# Oculta o teclado virtual após a confirmação
+	DisplayServer.virtual_keyboard_hide()
+
 #region Callbacks
 func _on_ad_failed_to_load(error: LoadAdError) -> void:
 	_log("Failed to load: " + error.message)
@@ -121,21 +136,24 @@ func _on_ad_opened() -> void:
 	_log("Ad opened")
 #endregion
 
-func _update_position(new_position: int) -> void:
+func _update_position(new_position: AdPosition) -> void:
 	_ad_position = new_position
 	if _ad_view:
-		_on_load_banner_pressed()
+		_ad_view.set_position(_ad_position)
+		_log("Position updated")
+		if Registry.safe_area:
+			Registry.safe_area.update_ad_overlap(_ad_view)
 
 #region Position Signals
-func _on_top_pressed() -> void: _update_position(AdPosition.Values.TOP)
-func _on_bottom_pressed() -> void: _update_position(AdPosition.Values.BOTTOM)
-func _on_left_pressed() -> void: _update_position(AdPosition.Values.LEFT)
-func _on_right_pressed() -> void: _update_position(AdPosition.Values.RIGHT)
-func _on_top_left_pressed() -> void: _update_position(AdPosition.Values.TOP_LEFT)
-func _on_top_right_pressed() -> void: _update_position(AdPosition.Values.TOP_RIGHT)
-func _on_bottom_left_pressed() -> void: _update_position(AdPosition.Values.BOTTOM_LEFT)
-func _on_bottom_right_pressed() -> void: _update_position(AdPosition.Values.BOTTOM_RIGHT)
-func _on_center_pressed() -> void: _update_position(AdPosition.Values.CENTER)
+func _on_top_pressed() -> void: _update_position(AdPosition.TOP)
+func _on_bottom_pressed() -> void: _update_position(AdPosition.BOTTOM)
+func _on_left_pressed() -> void: _update_position(AdPosition.LEFT)
+func _on_right_pressed() -> void: _update_position(AdPosition.RIGHT)
+func _on_top_left_pressed() -> void: _update_position(AdPosition.TOP_LEFT)
+func _on_top_right_pressed() -> void: _update_position(AdPosition.TOP_RIGHT)
+func _on_bottom_left_pressed() -> void: _update_position(AdPosition.BOTTOM_LEFT)
+func _on_bottom_right_pressed() -> void: _update_position(AdPosition.BOTTOM_RIGHT)
+func _on_center_pressed() -> void: _update_position(AdPosition.CENTER)
 #endregion
 
 func _log(message: String) -> void:

@@ -1,117 +1,202 @@
-[gd_scene load_steps=12 format=3 uid="uid://fw5n4y4tco09c"]
+[gd_scene format=3 uid="uid://b2qsjw7krh5ik"]
 
 [ext_resource type="Script" uid="uid://cms3u6npd4bot" path="res://addons/admob/csharp/sample/tabs/Banner.cs" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://c6d7aye5nwtvi" path="res://addons/admob/assets/pos_top_left.svg" id="16_tl"]
-[ext_resource type="Texture2D" uid="uid://kakk2nrappoc" path="res://addons/admob/assets/pos_top.svg" id="17_t"]
-[ext_resource type="Texture2D" uid="uid://ba3m3mh4pn8of" path="res://addons/admob/assets/pos_top_right.svg" id="18_tr"]
-[ext_resource type="Texture2D" uid="uid://cr4ao6vsp5736" path="res://addons/admob/assets/pos_left.svg" id="19_l"]
-[ext_resource type="Texture2D" uid="uid://b41mioah3scis" path="res://addons/admob/assets/pos_center.svg" id="20_c"]
-[ext_resource type="Texture2D" uid="uid://ceou56162w5po" path="res://addons/admob/assets/pos_right.svg" id="21_r"]
-[ext_resource type="Texture2D" uid="uid://bp0dyr8cp5ye0" path="res://addons/admob/assets/pos_bottom_left.svg" id="22_bl"]
-[ext_resource type="Texture2D" uid="uid://5v6slm2g7ad0" path="res://addons/admob/assets/pos_bottom.svg" id="23_b"]
-[ext_resource type="Texture2D" uid="uid://e3dqlgeny8lx" path="res://addons/admob/assets/pos_bottom_right.svg" id="24_br"]
+[ext_resource type="Texture2D" uid="uid://c6d7aye5nwtvi" path="res://addons/admob/assets/pos_top_left.svg" id="2_tl"]
+[ext_resource type="Texture2D" uid="uid://kakk2nrappoc" path="res://addons/admob/assets/pos_top.svg" id="3_t"]
+[ext_resource type="Texture2D" uid="uid://ba3m3mh4pn8of" path="res://addons/admob/assets/pos_top_right.svg" id="4_tr"]
+[ext_resource type="Texture2D" uid="uid://cr4ao6vsp5736" path="res://addons/admob/assets/pos_left.svg" id="5_l"]
+[ext_resource type="Texture2D" uid="uid://b41mioah3scis" path="res://addons/admob/assets/pos_center.svg" id="6_c"]
+[ext_resource type="Texture2D" uid="uid://ceou56162w5po" path="res://addons/admob/assets/pos_right.svg" id="7_r"]
+[ext_resource type="Texture2D" uid="uid://bp0dyr8cp5ye0" path="res://addons/admob/assets/pos_bottom_left.svg" id="8_bl"]
+[ext_resource type="Texture2D" uid="uid://5v6slm2g7ad0" path="res://addons/admob/assets/pos_bottom.svg" id="9_b"]
+[ext_resource type="Texture2D" uid="uid://e3dqlgeny8lx" path="res://addons/admob/assets/pos_bottom_right.svg" id="10_br"]
 
-[node name="Banner" type="VBoxContainer"]
+[node name="Banner" type="VBoxContainer" unique_id=844789355]
+offset_right = 400.0
+offset_bottom = 800.0
+theme_override_constants/separation = 20
 script = ExtResource("1_script")
 
-[node name="LoadBanner" type="Button" parent="."]
+[node name="ActionsCard" type="PanelContainer" parent="." unique_id=1334541260]
+layout_mode = 2
+theme_type_variation = &"SectionCard"
+
+[node name="VBox" type="VBoxContainer" parent="ActionsCard" unique_id=145261303]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="ActionsCard/VBox" unique_id=1479348397]
+layout_mode = 2
+text = "BANNER CONTROLS"
+horizontal_alignment = 1
+
+[node name="BannerActions" type="FlowContainer" parent="ActionsCard/VBox" unique_id=493367877]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+alignment = 1
+
+[node name="LoadBanner" type="Button" parent="ActionsCard/VBox/BannerActions" unique_id=2125535567]
+custom_minimum_size = Vector2(160, 50)
 layout_mode = 2
 text = "Load Banner"
 
-[node name="DestroyBanner" type="Button" parent="."]
+[node name="DestroyBanner" type="Button" parent="ActionsCard/VBox/BannerActions" unique_id=2032311922]
+custom_minimum_size = Vector2(160, 50)
 layout_mode = 2
 disabled = true
 text = "Destroy Banner"
 
-[node name="ShowBanner" type="Button" parent="."]
+[node name="ShowBanner" type="Button" parent="ActionsCard/VBox/BannerActions" unique_id=1859048598]
+custom_minimum_size = Vector2(160, 50)
 layout_mode = 2
 disabled = true
 text = "Show Banner"
 
-[node name="HideBanner" type="Button" parent="."]
+[node name="HideBanner" type="Button" parent="ActionsCard/VBox/BannerActions" unique_id=290648941]
+custom_minimum_size = Vector2(160, 50)
 layout_mode = 2
 disabled = true
 text = "Hide Banner"
 
-[node name="GetSize" type="Button" parent="."]
+[node name="GetSize" type="Button" parent="ActionsCard/VBox/BannerActions" unique_id=1684977602]
+custom_minimum_size = Vector2(160, 50)
 layout_mode = 2
 disabled = true
 text = "Get Size"
 
-[node name="HSeparator" type="HSeparator" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="PositionCard" type="PanelContainer" parent="."]
+[node name="CustomCard" type="PanelContainer" parent="." unique_id=1288863104]
 layout_mode = 2
 theme_type_variation = &"SectionCard"
 
-[node name="VBox" type="VBoxContainer" parent="PositionCard"]
+[node name="VBox" type="VBoxContainer" parent="CustomCard" unique_id=631550137]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CustomCard/VBox" unique_id=149856706]
+layout_mode = 2
+text = "CUSTOM POSITION (XY)"
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="CustomCard/VBox" unique_id=671677433]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="XLabel" type="Label" parent="CustomCard/VBox/HBox" unique_id=182396566]
+layout_mode = 2
+text = "X:"
+
+[node name="XValue" type="LineEdit" parent="CustomCard/VBox/HBox" unique_id=1320308422]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "50"
+placeholder_text = "0"
+alignment = 1
+select_all_on_focus = true
+virtual_keyboard_type = 2
+
+[node name="YLabel" type="Label" parent="CustomCard/VBox/HBox" unique_id=1446992680]
+layout_mode = 2
+text = "Y:"
+
+[node name="YValue" type="LineEdit" parent="CustomCard/VBox/HBox" unique_id=502946872]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "500"
+placeholder_text = "0"
+alignment = 1
+select_all_on_focus = true
+virtual_keyboard_type = 2
+
+[node name="ApplyCustom" type="Button" parent="CustomCard/VBox/HBox" unique_id=744549310]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Update"
+
+[node name="PositionCard" type="PanelContainer" parent="." unique_id=1029869087]
+layout_mode = 2
+theme_type_variation = &"SectionCard"
+
+[node name="VBox" type="VBoxContainer" parent="PositionCard" unique_id=1581004465]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="PositionCard/VBox"]
+[node name="Label" type="Label" parent="PositionCard/VBox" unique_id=2032213955]
 layout_mode = 2
-text = "AD POSITIONS"
+text = "PRESET POSITIONS"
 horizontal_alignment = 1
 
-[node name="PositionGrid" type="GridContainer" parent="PositionCard/VBox"]
+[node name="PositionGrid" type="GridContainer" parent="PositionCard/VBox" unique_id=908776461]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/h_separation = 20
-theme_override_constants/v_separation = 20
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
 columns = 3
 
-[node name="TOP_LEFT" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="TOP_LEFT" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=1998850779]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("16_tl")
+tooltip_text = "Top Left"
+icon = ExtResource("2_tl")
 expand_icon = true
 
-[node name="TOP" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="TOP" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=2024006619]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("17_t")
+tooltip_text = "Top"
+icon = ExtResource("3_t")
 expand_icon = true
 
-[node name="TOP_RIGHT" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="TOP_RIGHT" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=1469490715]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("18_tr")
+tooltip_text = "Top Right"
+icon = ExtResource("4_tr")
 expand_icon = true
 
-[node name="LEFT" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="LEFT" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=1746130911]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("19_l")
+tooltip_text = "Left"
+icon = ExtResource("5_l")
 expand_icon = true
 
-[node name="CENTER" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="CENTER" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=1514444053]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("20_c")
+tooltip_text = "Center"
+icon = ExtResource("6_c")
 expand_icon = true
 
-[node name="RIGHT" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="RIGHT" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=712408500]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("21_r")
+tooltip_text = "Right"
+icon = ExtResource("7_r")
 expand_icon = true
 
-[node name="BOTTOM_LEFT" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="BOTTOM_LEFT" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=2050378864]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("22_bl")
+tooltip_text = "Bottom Left"
+icon = ExtResource("8_bl")
 expand_icon = true
 
-[node name="BOTTOM" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="BOTTOM" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=1628262036]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("23_b")
+tooltip_text = "Bottom"
+icon = ExtResource("9_b")
 expand_icon = true
 
-[node name="BOTTOM_RIGHT" type="Button" parent="PositionCard/VBox/PositionGrid"]
-custom_minimum_size = Vector2(120, 120)
+[node name="BOTTOM_RIGHT" type="Button" parent="PositionCard/VBox/PositionGrid" unique_id=623131612]
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-icon = ExtResource("24_br")
+tooltip_text = "Bottom Right"
+icon = ExtResource("10_br")
 expand_icon = true
+
