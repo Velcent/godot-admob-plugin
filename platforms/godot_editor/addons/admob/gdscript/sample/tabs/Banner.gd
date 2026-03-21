@@ -141,6 +141,8 @@ func _update_position(new_position: AdPosition) -> void:
 	if _ad_view:
 		_ad_view.set_position(_ad_position)
 		_log("Position updated")
+		if Registry.safe_area:
+			Registry.safe_area.update_ad_overlap(_ad_view)
 
 #region Position Signals
 func _on_top_pressed() -> void: _update_position(AdPosition.TOP)
