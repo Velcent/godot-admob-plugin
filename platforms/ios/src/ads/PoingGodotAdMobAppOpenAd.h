@@ -20,20 +20,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef PoingGodotAdMobModule_h
-#define PoingGodotAdMobModule_h
+#ifndef PoingGodotAdMobAppOpenAd_h
+#define PoingGodotAdMobAppOpenAd_h
 
-#include "PoingGodotAdMob.h"
-#include "PoingGodotAdMobAdSize.h"
-#include "PoingGodotAdMobAdView.h"
-#include "PoingGodotAdMobInterstitialAd.h"
-#include "PoingGodotAdMobRewardedAd.h"
-#include "PoingGodotAdMobRewardedInterstitialAd.h"
-#include "PoingGodotAdMobConsentInformation.h"
-#include "PoingGodotAdMobAppOpenAd.h"
-#include "PoingGodotAdMobUserMessagingPlatform.h"
+#import "converters/GodotDictionaryToObject.h"
+#import "ObjectController.h"
 
-void register_poing_godot_admob_ads_types();
-void unregister_poing_godot_admob_ads_types();
+#import "adformats/AppOpenAd.h"
 
-#endif /* PoingGodotAdMobModule_h */
+@class AppOpenAd;
+
+@import GoogleMobileAds;
+
+class PoingGodotAdMobAppOpenAd : public ObjectController<AppOpenAd> {
+    GDCLASS(PoingGodotAdMobAppOpenAd, Object);
+
+    static PoingGodotAdMobAppOpenAd *instance;
+    static void _bind_methods();
+
+public:
+    int create();
+    void load(String adUnitId, Dictionary adRequestDictionary, PackedStringArray keywords, int uid);
+    void show(int uid);
+    void destroy(int uid);
+    
+    String get_ad_unit_id(int uid);
+    Dictionary get_response_info(int uid);
+    void set_placement_id(int uid, int placementId);
+    int get_placement_id(int uid);
+
+    static PoingGodotAdMobAppOpenAd *get_singleton();
+
+    PoingGodotAdMobAppOpenAd();
+    ~PoingGodotAdMobAppOpenAd();
+};
+
+#endif /* PoingGodotAdMobAppOpenAd_h */

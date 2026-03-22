@@ -20,20 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef PoingGodotAdMobModule_h
-#define PoingGodotAdMobModule_h
+#ifndef AppOpenAd_h
+#define AppOpenAd_h
 
-#include "PoingGodotAdMob.h"
-#include "PoingGodotAdMobAdSize.h"
-#include "PoingGodotAdMobAdView.h"
-#include "PoingGodotAdMobInterstitialAd.h"
-#include "PoingGodotAdMobRewardedAd.h"
-#include "PoingGodotAdMobRewardedInterstitialAd.h"
-#include "PoingGodotAdMobConsentInformation.h"
-#include "PoingGodotAdMobAppOpenAd.h"
-#include "PoingGodotAdMobUserMessagingPlatform.h"
+#import <UIKit/UIKit.h>
+#import <GoogleMobileAds/GoogleMobileAds.h>
+#import "../helpers/StaticVariablesHelper.h"
+#import "AdFormatBase.h"
 
-void register_poing_godot_admob_ads_types();
-void unregister_poing_godot_admob_ads_types();
+@interface AppOpenAd : AdFormatBase <GADFullScreenContentDelegate>
 
-#endif /* PoingGodotAdMobModule_h */
+@property(nonatomic, strong) GADAppOpenAd *appOpenAd;
+@property(nonatomic, assign) int placementId;
+
+- (instancetype)initWithUID:(int)UID;
+- (void)load:(GADRequest *)request withAdUnitId:(NSString*) adUnitId;
+- (void)show;
+
+@end
+
+#endif /* AppOpenAd_h */

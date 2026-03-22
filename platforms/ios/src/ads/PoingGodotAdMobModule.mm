@@ -30,6 +30,7 @@ PoingGodotAdMobAdView *poing_godot_admob_ad_view;
 PoingGodotAdMobInterstitialAd *poing_godot_admob_interstitial_ad;
 PoingGodotAdMobRewardedAd *poing_godot_admob_rewarded_ad;
 PoingGodotAdMobRewardedInterstitialAd *poing_godot_admob_rewarded_interstitial_ad;
+PoingGodotAdMobAppOpenAd *poing_godot_admob_app_open_ad;
 PoingGodotAdMobConsentInformation *poing_godot_admob_consent_information;
 PoingGodotAdMobUserMessagingPlatform *poing_godot_admob_user_messaging_platform;
 
@@ -51,6 +52,9 @@ void register_poing_godot_admob_ads_types() {
     
     poing_godot_admob_rewarded_interstitial_ad = memnew(PoingGodotAdMobRewardedInterstitialAd);
     Engine::get_singleton()->add_singleton(Engine::Singleton("PoingGodotAdMobRewardedInterstitialAd", poing_godot_admob_rewarded_interstitial_ad));
+    
+    poing_godot_admob_app_open_ad = memnew(PoingGodotAdMobAppOpenAd);
+    Engine::get_singleton()->add_singleton(Engine::Singleton("PoingGodotAdMobAppOpenAd", poing_godot_admob_app_open_ad));
     
     poing_godot_admob_consent_information = memnew(PoingGodotAdMobConsentInformation);
     Engine::get_singleton()->add_singleton(Engine::Singleton("PoingGodotAdMobConsentInformation", poing_godot_admob_consent_information));
@@ -77,6 +81,9 @@ void unregister_poing_godot_admob_ads_types() {
     }
     if (poing_godot_admob_rewarded_interstitial_ad) {
         memdelete(poing_godot_admob_rewarded_interstitial_ad);
+    }
+    if (poing_godot_admob_app_open_ad) {
+        memdelete(poing_godot_admob_app_open_ad);
     }
     if (poing_godot_admob_consent_information) {
         memdelete(poing_godot_admob_consent_information);
