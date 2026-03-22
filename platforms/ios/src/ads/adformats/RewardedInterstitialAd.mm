@@ -52,18 +52,15 @@
 }
 
 - (void)show {
-    if (self.rewarded){
-        UIViewController *rootViewController = [[UIApplication sharedApplication] delegate].window.rootViewController;
-        [self.rewarded presentFromRootViewController:rootViewController
-                               userDidEarnRewardHandler:^{
-             GADAdReward *reward = self.rewarded.adReward;
-             PoingGodotAdMobRewardedInterstitialAd::get_singleton()->emit_signal("on_rewarded_interstitial_ad_user_earned_reward",
-                                                                     [self.UID intValue],
-                                                                     [ObjectToGodotDictionary convertGADAdRewardToDictionary:reward]);
-         }];
+    if (self.rewardedInterstitialAd){
+        [self.rewardedInterstitialAd presentFromRootViewController:[self getRootViewController]
+                                                          userDidEarnRewardHandler:^{
+            GADAdReward *reward = self.rewardedInterstitialAd.adReward;
+            PoingGodotAdMobRewardedInterstitialAd::get_singleton()->emit_signal("on_rewarded_interstitial_ad_user_earned_reward", [self.UID intValue], [ObjectToGodotDictionary convertGADAdRewardToDictionary:reward]);
+        }];
     }
     else{
-        NSLog(@"RewardedInterstitialAd wasn't ready");
+        NSLog(@"rewarded interstitial ad wasn't ready");
     }
 }
 

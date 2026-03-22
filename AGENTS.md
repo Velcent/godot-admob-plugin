@@ -11,6 +11,7 @@ This file is the authoritative source of truth for ALL AI agents (Gemini, Claude
 - **C# Bridge:** `platforms/godot_editor/addons/admob/csharp/`
   - Mirrors GDScript API. Managed by `CSharpService.gd` (auto-hides via `.gdignore`).
 - **Native Bridges:** Android (Kotlin/JNI) in `platforms/android/`, iOS (Swift/Obj-C) in `platforms/ios/`.
+- **Reference Source Code:** `tmp/`. Contains reference implementations for logic and architecture.
 
 ## 📦 Current Environment
 - **Godot Version:** 4.6.1 (Current target for builds and testing).

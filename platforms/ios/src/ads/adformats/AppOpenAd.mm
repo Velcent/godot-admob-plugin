@@ -65,29 +65,8 @@
 }
 
 - (void)show {
-    NSLog(@"AppOpenAd show called");
     if (self.appOpenAd){
-        UIWindow *window = nil;
-        if (window == nil) {
-            window = [[UIApplication sharedApplication] keyWindow];
-            NSLog(@"AppOpenAd: keyWindow: %@", window);
-        }
-        if (window == nil) {
-            window = [[[UIApplication sharedApplication] delegate] window];
-            NSLog(@"AppOpenAd: delegateWindow: %@", window);
-        }
-        
-        UIViewController *rootViewController = [window rootViewController];
-        NSLog(@"AppOpenAd: rootViewController: %@", rootViewController);
-        
-        if (rootViewController) {
-            [self.appOpenAd presentFromRootViewController:rootViewController];
-        } else {
-            NSLog(@"AppOpenAd: Error: rootViewController is nil");
-            PoingGodotAdMobAppOpenAd::get_singleton()->emit_signal("on_app_open_ad_failed_to_show_full_screen_content",
-                                                                         [self.UID intValue],
-                                                                         Dictionary()); // Empty error for now
-        }
+        [self.appOpenAd presentFromRootViewController:[self getRootViewController]];
     } else {
         NSLog(@"AppOpenAd: Error: self.appOpenAd is nil");
     }
