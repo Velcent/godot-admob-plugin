@@ -57,7 +57,7 @@ func _update_ui_state(is_loaded: bool) -> void:
 	_get_size_button.disabled = !is_loaded
 
 func _get_ad_unit_id() -> String:
-	return "ca-app-pub-3940256099942544/2934735716" if OS.get_name() == "Android" else "ca-app-pub-3940256099942544/2934735716"
+	return "ca-app-pub-3940256099942544/6300978111" if OS.get_name() == "Android" else "ca-app-pub-3940256099942544/2934735716"
 
 func _load_banner(hide_immediately: bool = false) -> void:
 	if _ad_view:

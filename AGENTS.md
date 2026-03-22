@@ -11,6 +11,7 @@ This file is the authoritative source of truth for ALL AI agents (Gemini, Claude
 - **C# Bridge:** `platforms/godot_editor/addons/admob/csharp/`
   - Mirrors GDScript API. Managed by `CSharpService.gd` (auto-hides via `.gdignore`).
 - **Native Bridges:** Android (Kotlin/JNI) in `platforms/android/`, iOS (Swift/Obj-C) in `platforms/ios/`.
+- **Reference Source Code:** `tmp/`. Contains reference implementations for logic and architecture.
 
 ## 📦 Current Environment
 - **Godot Version:** 4.6.1 (Current target for builds and testing).
@@ -27,6 +28,7 @@ This file is the authoritative source of truth for ALL AI agents (Gemini, Claude
 - **License Header:** EVERY new file MUST start with the project's MIT License header.
 - **GDScript:** Always use `:=` for type inference. Prefix bridge signals with `_on_admob_`.
 - **C#:** Use PascalCase. Maintain 1:1 parity with the GDScript API.
+- **Samples:** Always use platform-specific test Ad Unit IDs with ternary operators (GDScript) or properties (C#). Verify IDs against `docs/enable_test_ads.md`.
 
 ## 🔄 Specialized Protocols (Skills)
 When performing these specific tasks, you **MUST** read and follow the specialized guides:
@@ -42,10 +44,10 @@ When performing these specific tasks, you **MUST** read and follow the specializ
 - **Workflow:** Reproduce bugs with a script before implementing a fix. Never stage/commit unless asked.
 
 ## 📋 Pending Tasks
-- Verify iOS runtime behavior for the new warning system.
-- Sync new `CSharpService` rules to documentation if needed.
+- Verify iOS runtime behavior for App Open Ads in production environments.
 
 ## 🔗 Key Files
 - `platforms/godot_editor/addons/admob/admob.gd` (Main API)
 - `platforms/android/build.gradle` (Android Deps)
 - `platforms/ios/Package.swift` (iOS Deps)
+- `docs/enable_test_ads.md` (Source of truth for Test IDs)

@@ -58,7 +58,8 @@ func _update_ui_state(is_loaded: bool) -> void:
 
 func _on_load_pressed() -> void:
 	_log("Loading rewarded interstitial...")
-	RewardedInterstitialAdLoader.new().load("ca-app-pub-3940256099942544/5354046379", AdRequest.new(), _load_callback)
+	var unit_id := "ca-app-pub-3940256099942544/5354046379" if OS.get_name() == "Android" else "ca-app-pub-3940256099942544/6978759866"
+	RewardedInterstitialAdLoader.new().load(unit_id, AdRequest.new(), _load_callback)
 
 func _on_show_pressed() -> void:
 	if _rewarded_interstitial_ad:

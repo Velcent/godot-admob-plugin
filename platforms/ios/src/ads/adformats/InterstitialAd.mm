@@ -52,11 +52,9 @@
 }
 
 - (void)show {
-    if (self.interstitial){
-        UIViewController *rootViewController = [[UIApplication sharedApplication] delegate].window.rootViewController;
-        [self.interstitial presentFromRootViewController:rootViewController];
-    }
-    else{
+    if (self.interstitial) {
+        [self.interstitial presentFromRootViewController:[self getRootViewController]];
+    } else {
         NSLog(@"interstitial ad wasn't ready");
     }
 }

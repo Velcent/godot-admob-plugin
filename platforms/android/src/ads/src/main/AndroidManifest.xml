@@ -30,6 +30,10 @@
         <meta-data
             android:name="org.godotengine.plugin.v2.PoingGodotAdMobUserMessagingPlatform"
             android:value="com.poingstudios.godot.admob.ads.PoingGodotAdMobUserMessagingPlatform" />
+
+        <meta-data
+            android:name="org.godotengine.plugin.v2.PoingGodotAdMobAppOpenAd"
+            android:value="com.poingstudios.godot.admob.ads.PoingGodotAdMobAppOpenAd" />
     </application>
 
 </manifest>
