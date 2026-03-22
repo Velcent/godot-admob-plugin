@@ -253,7 +253,7 @@ The app open ad has a 4 hour timeout. Cache the load time in the `_expire_time` 
 
 === "GDScript"
 
-    ```gdscript linenums="1" hl_lines="6-16"
+    ```gdscript linenums="1" hl_lines="14-15"
     func load_app_open_ad() -> void:
         # ...
         # Send the request to load the ad.
@@ -282,7 +282,7 @@ The app open ad has a 4 hour timeout. Cache the load time in the `_expire_time` 
 
 === "C#"
 
-    ```csharp linenums="1" hl_lines="6-18"
+    ```csharp linenums="1" hl_lines="29-30"
     public void LoadAppOpenAd()
     {
         // Clean up the old ad before loading a new one.
