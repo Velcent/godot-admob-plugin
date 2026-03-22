@@ -60,7 +60,7 @@ Create a new class (e.g., `AppOpenAdManager`) to load the ad. This class control
     extends Node
 
     var _app_open_ad: AppOpenAd
-    var _load_time: int = 0
+    var _expire_time: int = 0
     var _is_showing_ad: bool = false
 
     # These ad units are configured to always serve test ads.
@@ -68,9 +68,7 @@ Create a new class (e.g., `AppOpenAdManager`) to load the ad. This class control
         get:
             if OS.get_name() == "Android":
                 return "ca-app-pub-3940256099942544/9257395921"
-            elif OS.get_name() == "iOS":
-                return "ca-app-pub-3940256099942544/5575463023"
-            return "unused"
+            return "ca-app-pub-3940256099942544/5575463023"
 
     func is_ad_available() -> bool:
         return _app_open_ad != null
@@ -98,17 +96,9 @@ Create a new class (e.g., `AppOpenAdManager`) to load the ad. This class control
         private bool _isShowingAd;
 
         // These ad units are configured to always serve test ads.
-        private string _adUnitId
-        {
-            get
-            {
-                if (OS.GetName() == "Android")
-                    return "ca-app-pub-3940256099942544/9257395921";
-                if (OS.GetName() == "iOS")
-                    return "ca-app-pub-3940256099942544/5575463023";
-                return "unused";
-            }
-        }
+        private string _adUnitId => OS.GetName() == "Android" 
+            ? "ca-app-pub-3940256099942544/9257395921" 
+            : "ca-app-pub-3940256099942544/5575463023";
 
         public bool IsAdAvailable => _appOpenAd != null;
 
@@ -148,7 +138,6 @@ Loading an app open ad is accomplished using the `load()` method on the `AppOpen
             print("App open ad loaded with response : " + ad.get_response_info().response_id)
             _app_open_ad = ad
             _register_event_handlers(ad)
-            _load_time = Time.get_unix_time_from_system()
 
         load_callback.on_ad_failed_to_load = func(error: LoadAdError):
             print("App open ad failed to load an ad with error : " + error.message)
@@ -180,7 +169,6 @@ Loading an app open ad is accomplished using the `load()` method on the `AppOpen
             GD.Print("App open ad loaded with response : " + ad.GetResponseInfo().ResponseId);
             _appOpenAd = ad;
             RegisterEventHandlers(ad);
-            _expireTime = (long)Time.GetUnixTimeFromSystem() + (4 * 60 * 60);
         };
         loadCallback.OnAdFailedToLoad = (error) =>
         {
@@ -261,18 +249,78 @@ To further customize the behavior of your ad, you can hook into a number of even
 
 To ensure you don't show an expired ad, add a method to the `AppOpenAdManager` that checks how long it has been since your ad loaded. Then, use that method to check if the ad is still valid.
 
+The app open ad has a 4 hour timeout. Cache the load time in the `_expire_time` variable.
+
 === "GDScript"
+
+    ```gdscript linenums="1" hl_lines="6-16"
+    func load_app_open_ad() -> void:
+        # ...
+        # Send the request to load the ad.
+        var load_callback := AppOpenAdLoadCallback.new()
+
+        load_callback.on_ad_failed_to_load = func(error: LoadAdError):
+            # If the operation failed, an error is returned.
+            print("App open ad failed to load an ad with error : " + error.message)
+
+        load_callback.on_ad_loaded = func(ad: AppOpenAd):
+            # If the operation completed successfully, no error is returned.
+            print("App open ad loaded with response : " + ad.get_response_info().response_id)
+
+            # App open ads can be preloaded for up to 4 hours.
+            _expire_time = Time.get_unix_time_from_system() + (4 * 60 * 60)
+
+            _app_open_ad = ad
+            _register_event_handlers(ad)
+    ```
 
     ```gdscript linenums="1"
     func is_ad_available() -> bool:
-        if _app_open_ad == null:
-            return false
-            
-        var now := Time.get_unix_time_from_system()
-        return (now - _load_time) < (4 * 60 * 60) # 4 hours
+        return _app_open_ad != null \
+               and Time.get_unix_time_from_system() < _expire_time
     ```
 
 === "C#"
+
+    ```csharp linenums="1" hl_lines="6-18"
+    public void LoadAppOpenAd()
+    {
+        // Clean up the old ad before loading a new one.
+        if (_appOpenAd != null)
+        {
+            _appOpenAd.Destroy();
+            _appOpenAd = null;
+        }
+
+        GD.Print("Loading the app open ad.");
+
+        // Create our request used to load the ad.
+        var adRequest = new AdRequest();
+
+        // Send the request to load the ad.
+        var loadCallback = new AppOpenAdLoadCallback();
+
+        loadCallback.OnAdFailedToLoad = (error) =>
+        {
+            // If the operation failed, an error is returned.
+            GD.Print("App open ad failed to load an ad with error : " + error.Message);
+        };
+
+        loadCallback.OnAdLoaded = (ad) =>
+        {
+            // If the operation completed successfully, no error is returned.
+            GD.Print("App open ad loaded with response : " + ad.GetResponseInfo().ResponseId);
+
+            // App open ads can be preloaded for up to 4 hours.
+            _expireTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + (4 * 60 * 60);
+
+            _appOpenAd = ad;
+            RegisterEventHandlers(ad);
+        };
+
+        new AppOpenAdLoader().Load(_adUnitId, adRequest, loadCallback);
+    }
+    ```
 
     ```csharp linenums="1"
     public bool IsAdAvailable
@@ -280,7 +328,7 @@ To ensure you don't show an expired ad, add a method to the `AppOpenAdManager` t
         get
         {
             return _appOpenAd != null 
-                   && Time.GetUnixTimeFromSystem() < _expireTime;
+                   && DateTimeOffset.UtcNow.ToUnixTimeSeconds() < _expireTime;
         }
     }
     ```
