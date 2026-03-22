@@ -52,10 +52,10 @@
 }
 
 - (void)show {
-    if (self.rewardedInterstitialAd){
-        [self.rewardedInterstitialAd presentFromRootViewController:[self getRootViewController]
+    if (self.rewarded){
+        [self.rewarded presentFromRootViewController:[self getRootViewController]
                                                           userDidEarnRewardHandler:^{
-            GADAdReward *reward = self.rewardedInterstitialAd.adReward;
+            GADAdReward *reward = self.rewarded.adReward;
             PoingGodotAdMobRewardedInterstitialAd::get_singleton()->emit_signal("on_rewarded_interstitial_ad_user_earned_reward", [self.UID intValue], [ObjectToGodotDictionary convertGADAdRewardToDictionary:reward]);
         }];
     }
