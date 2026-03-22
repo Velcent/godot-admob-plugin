@@ -1,5 +1,4 @@
 // MIT License
-//
 // Copyright (c) 2023-present Poing Studios
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,9 +32,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
-import com.poingstudios.godot.admob.ads.nativetemplates.TemplateView
 import com.poingstudios.godot.admob.ads.converters.convertToGodotDictionary
 import com.poingstudios.godot.admob.ads.converters.convertToNativeTemplateStyle
+import com.poingstudios.godot.admob.ads.nativetemplates.TemplateView
 import com.poingstudios.godot.admob.core.utils.Logger
 import com.poingstudios.godot.admob.core.utils.getInt
 import org.godotengine.godot.Dictionary
@@ -44,11 +43,11 @@ import org.godotengine.godot.plugin.GodotPlugin.emitSignal
 import org.godotengine.godot.plugin.SignalInfo
 
 class NativeOverlayAd(
-    uid: Int,
-    activity: Activity,
-    private val godotLayout: FrameLayout,
-    godot: Godot,
-    private val pluginName: String
+        uid: Int,
+        activity: Activity,
+        private val godotLayout: FrameLayout,
+        godot: Godot,
+        private val pluginName: String
 ) : AdFormatsBase(uid, activity, godot) {
 
     private var mNativeAd: NativeAd? = null
@@ -59,7 +58,12 @@ class NativeOverlayAd(
 
     object SignalInfos {
         val onNativeOverlayAdLoaded = SignalInfo("on_native_overlay_ad_loaded", Integer::class.java)
-        val onNativeOverlayAdFailedToLoad = SignalInfo("on_native_overlay_ad_failed_to_load", Integer::class.java, Dictionary::class.java)
+        val onNativeOverlayAdFailedToLoad =
+                SignalInfo(
+                        "on_native_overlay_ad_failed_to_load",
+                        Integer::class.java,
+                        Dictionary::class.java
+                )
         val onAdClicked = SignalInfo("on_native_overlay_ad_clicked", Integer::class.java)
         val onAdClosed = SignalInfo("on_native_overlay_ad_closed", Integer::class.java)
         val onAdImpression = SignalInfo("on_native_overlay_ad_impression", Integer::class.java)
@@ -78,7 +82,7 @@ class NativeOverlayAd(
     fun load(adUnitId: String, adRequest: AdRequest, optionsDict: Dictionary) {
         activity.runOnUiThread {
             val builder = AdLoader.Builder(activity, adUnitId)
-            
+
             val optionsBuilder = NativeAdOptions.Builder()
             val mediaAspectRatio = optionsDict.getInt("media_aspect_ratio")
             if (mediaAspectRatio != 0) { // 0 is UNKNOWN
@@ -95,31 +99,39 @@ class NativeOverlayAd(
                 mNativeAd = nativeAd
             }
 
-            builder.withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    emitSignal(godot, pluginName, SignalInfos.onNativeOverlayAdFailedToLoad, uid, adError.convertToGodotDictionary())
-                }
+            builder.withAdListener(
+                    object : AdListener() {
+                        override fun onAdFailedToLoad(adError: LoadAdError) {
+                            emitSignal(
+                                    godot,
+                                    pluginName,
+                                    SignalInfos.onNativeOverlayAdFailedToLoad,
+                                    uid,
+                                    adError.convertToGodotDictionary()
+                            )
+                        }
 
-                override fun onAdClicked() {
-                    emitSignal(godot, pluginName, SignalInfos.onAdClicked, uid)
-                }
+                        override fun onAdClicked() {
+                            emitSignal(godot, pluginName, SignalInfos.onAdClicked, uid)
+                        }
 
-                override fun onAdClosed() {
-                    emitSignal(godot, pluginName, SignalInfos.onAdClosed, uid)
-                }
+                        override fun onAdClosed() {
+                            emitSignal(godot, pluginName, SignalInfos.onAdClosed, uid)
+                        }
 
-                override fun onAdImpression() {
-                    emitSignal(godot, pluginName, SignalInfos.onAdImpression, uid)
-                }
+                        override fun onAdImpression() {
+                            emitSignal(godot, pluginName, SignalInfos.onAdImpression, uid)
+                        }
 
-                override fun onAdOpened() {
-                    emitSignal(godot, pluginName, SignalInfos.onAdOpened, uid)
-                }
+                        override fun onAdOpened() {
+                            emitSignal(godot, pluginName, SignalInfos.onAdOpened, uid)
+                        }
 
-                override fun onAdLoaded() {
-                    emitSignal(godot, pluginName, SignalInfos.onNativeOverlayAdLoaded, uid)
-                }
-            })
+                        override fun onAdLoaded() {
+                            emitSignal(godot, pluginName, SignalInfos.onNativeOverlayAdLoaded, uid)
+                        }
+                    }
+            )
 
             val adLoader = builder.build()
             adLoader.loadAd(adRequest)
@@ -139,21 +151,32 @@ class NativeOverlayAd(
     private fun internalRenderTemplate(styleDict: Dictionary) {
         activity.runOnUiThread {
             if (mNativeAd == null) return@runOnUiThread
-            
+
             if (mTemplateView != null) {
                 godotLayout.removeView(mTemplateView)
                 godotLayout.removeOnLayoutChangeListener(mLayoutChangeListener)
             }
 
             val templateId = styleDict["template_id"] as? String ?: "medium"
-            val layoutResId = if (templateId == "small") {
-                activity.resources.getIdentifier("small_template_view_layout", "layout", activity.packageName)
-            } else {
-                activity.resources.getIdentifier("medium_template_view_layout", "layout", activity.packageName)
-            }
+            val layoutResId =
+                    if (templateId == "small") {
+                        activity.resources.getIdentifier(
+                                "small_template_view_layout",
+                                "layout",
+                                activity.packageName
+                        )
+                    } else {
+                        activity.resources.getIdentifier(
+                                "medium_template_view_layout",
+                                "layout",
+                                activity.packageName
+                        )
+                    }
 
             if (layoutResId == 0) {
-                Logger.error("Native Template Layout not found. Check if Native Templates are properly integrated.")
+                Logger.error(
+                        "Native Template Layout not found. Check if Native Templates are properly integrated."
+                )
                 return@runOnUiThread
             }
 
@@ -204,31 +227,50 @@ class NativeOverlayAd(
     }
 
     private fun getGravity(adPosition: Int?): Int {
-        val gravity = when (adPosition) {
-            AdPosition.TOP.value -> Gravity.TOP or Gravity.CENTER_HORIZONTAL
-            AdPosition.BOTTOM.value -> Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-            AdPosition.LEFT.value -> Gravity.BOTTOM or Gravity.START
-            AdPosition.RIGHT.value -> Gravity.BOTTOM or Gravity.END
-            AdPosition.TOP_LEFT.value -> Gravity.TOP or Gravity.START
-            AdPosition.TOP_RIGHT.value -> Gravity.TOP or Gravity.END
-            AdPosition.BOTTOM_LEFT.value -> Gravity.BOTTOM or Gravity.START
-            AdPosition.BOTTOM_RIGHT.value -> Gravity.BOTTOM or Gravity.END
-            AdPosition.CENTER.value -> Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
-            else -> throw IllegalArgumentException("Invalid AdPosition: $adPosition")
-        }
+        val gravity =
+                when (adPosition) {
+                    AdPosition.TOP.value -> Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                    AdPosition.BOTTOM.value -> Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                    AdPosition.LEFT.value -> Gravity.BOTTOM or Gravity.START
+                    AdPosition.RIGHT.value -> Gravity.BOTTOM or Gravity.END
+                    AdPosition.TOP_LEFT.value -> Gravity.TOP or Gravity.START
+                    AdPosition.TOP_RIGHT.value -> Gravity.TOP or Gravity.END
+                    AdPosition.BOTTOM_LEFT.value -> Gravity.BOTTOM or Gravity.START
+                    AdPosition.BOTTOM_RIGHT.value -> Gravity.BOTTOM or Gravity.END
+                    AdPosition.CENTER.value -> Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
+                    null -> Gravity.TOP or Gravity.START
+                    else -> throw IllegalArgumentException("Invalid AdPosition: $adPosition")
+                }
         return gravity
     }
 
     private fun updatePositionLogic() {
         val view = mTemplateView ?: return
-        val layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        val layoutParams =
+                FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT
+                )
+
+        layoutParams.gravity = getGravity(mPosition.value)
+        val safeArea = getSafeArea()
+
+        val leftInset = safeArea.left
+        val topInset = safeArea.top
+        val rightInset = activity.window.decorView.width - safeArea.right
+        val bottomInset = activity.window.decorView.height - safeArea.bottom
 
         if (mPosition.value == null) {
-            layoutParams.gravity = Gravity.TOP or Gravity.START
-            layoutParams.leftMargin = mPosition.customX
-            layoutParams.topMargin = mPosition.customY
+            val density = activity.resources.displayMetrics.density
+            layoutParams.leftMargin = (mPosition.customX * density).toInt()
+            layoutParams.topMargin = (mPosition.customY * density).toInt()
+            layoutParams.rightMargin = 0
+            layoutParams.bottomMargin = 0
         } else {
-            layoutParams.gravity = getGravity(mPosition.value)
+            layoutParams.bottomMargin = bottomInset
+            layoutParams.rightMargin = rightInset
+            layoutParams.leftMargin = leftInset
+            layoutParams.topMargin = topInset
         }
 
         view.layoutParams = layoutParams

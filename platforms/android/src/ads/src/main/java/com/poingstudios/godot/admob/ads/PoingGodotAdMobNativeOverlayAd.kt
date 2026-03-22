@@ -63,15 +63,17 @@ class PoingGodotAdMobNativeOverlayAd(godot: Godot?) : org.godotengine.godot.plug
 
     @UsedByGodot
     fun create() : Int{
-        val nativeAd = NativeOverlayAd(nativeAds.size, aActivity, aGodotLayout, godot, pluginName).apply {
-            nativeAds.add(this)
-        }
-        return nativeAd.uid
+        val uid = nativeAds.size
+        nativeAds.add(null)
+        return uid
     }
 
     @UsedByGodot
     fun load(adUnitId: String, adRequestDictionary: Dictionary, keywords: Array<String>, optionsDictionary: Dictionary, uid: Int){
         val adRequest = adRequestDictionary.convertToAdRequest(keywords)
+        if (nativeAds[uid] == null) {
+            nativeAds[uid] = NativeOverlayAd(uid, aActivity, aGodotLayout, godot, pluginName)
+        }
         nativeAds[uid]?.load(adUnitId, adRequest, optionsDictionary)
     }
 
