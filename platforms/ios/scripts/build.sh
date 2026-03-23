@@ -154,6 +154,11 @@ for PLUGIN in "${ALL_PLUGINS[@]}"; do
     CONFIG_DIR=$(get_plugin_config_dir "$PLUGIN")
     cp "$CONFIG_DIR"/*.gdip "$STAGING_INTERNAL/"
     cp "$CONFIG_DIR"/*.gd "$STAGING_INTERNAL/" 2>/dev/null || true
+
+    if [ "$PLUGIN" == "ads" ]; then
+        mkdir -p "$STAGING_INTERNAL/poing-godot-admob/res"
+        cp ./src/ads/helpers/NativeTemplates/*.xib "$STAGING_INTERNAL/poing-godot-admob/res/"
+    fi
 done
 
 PLUGIN_VERSION=$(grep -E '^version=' "$PLUGIN_CONFIG_PATH" | cut -d '"' -f 2)

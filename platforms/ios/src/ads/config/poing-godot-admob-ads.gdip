@@ -10,7 +10,7 @@ linked=[]
 embedded=[]
 system=["AppTrackingTransparency.framework"]
 capabilities=[]
-files=[]
+files=["poing-godot-admob/res/GADTMediumTemplateView.xib", "poing-godot-admob/res/GADTSmallTemplateView.xib"]
 linker_flags=["-ObjC"]
 admob_packages=[
   "https://github.com/googleads/swift-package-manager-google-mobile-ads.git@exact:13.1.0|GoogleMobileAds",

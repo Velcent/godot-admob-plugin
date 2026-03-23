@@ -52,7 +52,7 @@ The main steps to integrate app open ads are:
 Create a new class (e.g., `AppOpenAdManager`) to load the ad. This class controls an instance variable to keep track of a loaded ad and the ad unit ID for each platform.
 
 !!! tip
-    While not strictly required, adding this script as an **Autoload** (Singleton) is highly recommended. This ensures the manager survives scene changes and remains persistent in the scene tree—providing a seamless global state monitor identical to the automated systems used by Google in other platforms like Unity.
+    While not strictly required, adding this script as an **Autoload** (Singleton) is highly recommended. This ensures the manager survives scene changes and remains persistent in the scene tree—providing a seamless global state monitor identical to the automated systems used by Google in other platforms.
 
 === "GDScript"
 
