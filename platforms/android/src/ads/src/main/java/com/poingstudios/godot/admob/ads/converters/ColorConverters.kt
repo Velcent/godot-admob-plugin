@@ -28,12 +28,24 @@ import android.util.Log
 fun String.toAndroidColor(): Int {
     if (this.isEmpty()) return Color.TRANSPARENT
     
-    val hex = if (this.startsWith("#")) this else "#$this"
+    var hex = if (this.startsWith("#")) this.substring(1) else this
+    
+    // Godot to_html(true) returns RRGGBBAA
+    // Android Color.parseColor expects AARRGGBB
+    if (hex.length == 8) {
+        val rr = hex.substring(0, 2)
+        val gg = hex.substring(2, 4)
+        val bb = hex.substring(4, 6)
+        val aa = hex.substring(6, 8)
+        hex = aa + rr + gg + bb
+    }
+    
+    val finalHex = "#$hex"
     
     return try {
-        Color.parseColor(hex)
+        Color.parseColor(finalHex)
     } catch (e: Exception) {
-        Log.e("PoingAdMob", "Failed to parse color: $hex. Falling back to Transparent.")
+        Log.e("PoingAdMob", "Failed to parse color: $finalHex. Falling back to Transparent.")
         Color.TRANSPARENT
     }
 }
