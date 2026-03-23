@@ -47,8 +47,14 @@ Loading a native ad is accomplished using the `load()` method on the `NativeOver
     ```gdscript linenums="1"
     var _native_overlay_ad: NativeOverlayAd
 
+    # These ad units are configured to always serve test ads.
+    var _ad_unit_id: String:
+        get:
+            if OS.get_name() == "Android":
+                return "ca-app-pub-3940256099942544/2247696110"
+            return "ca-app-pub-3940256099942544/3986624511"
+
     func _load_native_ad() -> void:
-        var ad_unit_id := "ca-app-pub-3940256099942544/2247696110" # Android test ID
         var ad_request := AdRequest.new()
         var options := NativeAdOptions.new()
         
@@ -56,7 +62,7 @@ Loading a native ad is accomplished using the `load()` method on the `NativeOver
         options.ad_choices_placement = AdChoicesPlacement.Values.TOP_RIGHT
         options.media_aspect_ratio = NativeMediaAspectRatio.Values.ANY
 
-        NativeOverlayAd.load(ad_unit_id, ad_request, options, _on_ad_load_finished)
+        NativeOverlayAd.load(_ad_unit_id, ad_request, options, _on_ad_load_finished)
 
     func _on_ad_load_finished(ad: NativeOverlayAd, error: LoadAdError) -> void:
         if error:
@@ -66,6 +72,45 @@ Loading a native ad is accomplished using the `load()` method on the `NativeOver
         print("Native ad loaded successfully")
         _native_overlay_ad = ad
         _render_native_ad()
+    ```
+
+=== "C#"
+
+    ```csharp linenums="1"
+    using PoingStudios.AdMob.Api;
+    using PoingStudios.AdMob.Api.Core;
+
+    private NativeOverlayAd _nativeOverlayAd;
+
+    // These ad units are configured to always serve test ads.
+    private string _adUnitId => OS.GetName() == "Android" 
+        ? "ca-app-pub-3940256099942544/2247696110" 
+        : "ca-app-pub-3940256099942544/3986624511";
+
+    private void LoadNativeAd()
+    {
+        var adRequest = new AdRequest();
+        var options = new NativeAdOptions();
+
+        // Optional: configure options
+        options.AdChoicesPlacement = AdChoicesPlacement.Values.TopRight;
+        options.MediaAspectRatio = NativeMediaAspectRatio.Values.Any;
+
+        NativeOverlayAd.Load(_adUnitId, adRequest, options, OnAdLoadFinished);
+    }
+
+    private void OnAdLoadFinished(NativeOverlayAd ad, LoadAdError error)
+    {
+        if (error != null)
+        {
+            GD.Print("Native ad failed to load: " + error.Message);
+            return;
+        }
+
+        GD.Print("Native ad loaded successfully");
+        _nativeOverlayAd = ad;
+        RenderNativeAd();
+    }
     ```
 
 ### Define the template style
@@ -97,6 +142,33 @@ You can use `NativeTemplateStyle` to customize how the ad looks. There are two m
         _native_overlay_ad.render_template(style, AdPosition.BOTTOM)
     ```
 
+=== "C#"
+
+    ```csharp linenums="1"
+    private void RenderNativeAd()
+    {
+        var style = new NativeTemplateStyle();
+
+        // Choose template: Small or Medium
+        style.TemplateId = NativeTemplateStyle.Medium;
+
+        // Customize background color
+        style.MainBackgroundColor = Colors.White;
+
+        // Customize Call To Action (CTA) button
+        var ctaStyle = new NativeTemplateTextStyle();
+        ctaStyle.BackgroundColor = Colors.DodgerBlue;
+        ctaStyle.TextColor = Colors.White;
+        ctaStyle.FontSize = 15.0f;
+        ctaStyle.Style = NativeTemplateFontStyle.Bold;
+
+        style.CallToActionText = ctaStyle;
+
+        // Render the template at a specific position
+        _nativeOverlayAd.RenderTemplate(style, AdPosition.Bottom);
+    }
+    ```
+
 ### Ad Positions
 
 You can place the ad in several predefined positions or a custom XY coordinate using the `AdPosition` class.
@@ -124,6 +196,20 @@ To handle user interactions, you can use the `ad_listener` property of the `Nati
         ad.ad_listener.on_ad_closed = func(): print("Ad Closed")
     ```
 
+=== "C#"
+
+    ```csharp linenums="1"
+    private void OnAdLoadFinished(NativeOverlayAd ad, LoadAdError error)
+    {
+        // ... load check ...
+
+        ad.AdListener.OnAdClicked = () => GD.Print("Ad Clicked");
+        ad.AdListener.OnAdImpression = () => GD.Print("Ad Impression");
+        ad.AdListener.OnAdOpened = () => GD.Print("Ad Opened");
+        ad.AdListener.OnAdClosed = () => GD.Print("Ad Closed");
+    }
+    ```
+
 ### Show/Hide and Destroy
 
 Once rendered, you can control the visibility of the ad or destroy it completely to free resources.
@@ -140,6 +226,20 @@ Once rendered, you can control the visibility of the ad or destroy it completely
     # To destroy it (required when finished)
     _native_overlay_ad.destroy()
     _native_overlay_ad = null
+    ```
+
+=== "C#"
+
+    ```csharp linenums="1"
+    // To hide the ad
+    _nativeOverlayAd.Hide();
+
+    // To show it again
+    _nativeOverlayAd.Show();
+
+    // To destroy it (required when finished)
+    _nativeOverlayAd.Destroy();
+    _nativeOverlayAd = null;
     ```
 
 ## Best practices

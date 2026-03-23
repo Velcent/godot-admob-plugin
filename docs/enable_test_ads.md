@@ -34,6 +34,7 @@ Below are sample ad units for each format available on both Android and iOS:
     | Interstitial          | ca-app-pub-3940256099942544/1033173712 |
     | Rewarded              | ca-app-pub-3940256099942544/5224354917 |
     | Rewarded Interstitial | ca-app-pub-3940256099942544/5354046379 |
+    | Native                | ca-app-pub-3940256099942544/2247696110 |
 
 === "iOS"
 
@@ -44,6 +45,7 @@ Below are sample ad units for each format available on both Android and iOS:
     | Interstitial          | ca-app-pub-3940256099942544/4411468910 |
     | Rewarded              | ca-app-pub-3940256099942544/1712485313 |
     | Rewarded Interstitial | ca-app-pub-3940256099942544/6978759866 |
+    | Native                | ca-app-pub-3940256099942544/3986624511 |
 
 
 ## Enable test devices

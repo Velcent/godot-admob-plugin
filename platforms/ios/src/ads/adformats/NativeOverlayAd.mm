@@ -162,7 +162,7 @@
 }
 
 - (void)addTextStyleToStyles:(NSMutableDictionary *)styles fromDict:(NSDictionary *)textDict bgKey:(NSString *)bgKey fontKey:(NSString *)fontKey colorKey:(NSString *)colorKey {
-    if (!textDict || [textDict isKindOfClass:[NSNull class]]) return;
+    if (![textDict isKindOfClass:[NSDictionary class]]) return;
     
     UIColor *bg = [GADTTemplateView colorFromHexString:textDict[@"background_color"]];
     if (bg) styles[bgKey] = bg;

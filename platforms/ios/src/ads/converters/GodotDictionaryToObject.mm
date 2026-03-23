@@ -97,7 +97,9 @@
         NSString *nsKey = [NSString stringWithUTF8String:((String)key).utf8().get_data()];
         id nsValue = nil;
         
-        if (value.get_type() == Variant::DICTIONARY) {
+        if (value.get_type() == Variant::NIL) {
+            nsValue = [NSNull null];
+        } else if (value.get_type() == Variant::DICTIONARY) {
             nsValue = [GodotDictionaryToObject convertDictionaryToNSDictionary:(Dictionary)value];
         } else if (value.get_type() == Variant::INT || value.get_type() == Variant::FLOAT) {
             nsValue = [NSNumber numberWithDouble:(double)value];
