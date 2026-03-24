@@ -163,7 +163,10 @@ public partial class Banner : BaseTab
 			OnAdImpression = () => Log("Impression recorded"),
 		};
 		_adView.OnAdPaid = adValue =>
-			Log(string.Format("Ad paid: {0:F} {1} (precision: {2})", adValue.ValueMicros / 1000000.0, adValue.CurrencyCode, adValue.PrecisionType));
+		{
+			string adSourceName = adValue.ResponseInfo?.LoadedAdapterResponseInfo?.AdSourceName ?? "N/A";
+			Log(string.Format("Ad paid: {0:F} {1} (precision: {2}, source: {3})", adValue.ValueMicros / 1000000.0, adValue.CurrencyCode, adValue.PrecisionType, adSourceName));
+		};
 		_adView.LoadAd(new AdRequest());
 	}
 

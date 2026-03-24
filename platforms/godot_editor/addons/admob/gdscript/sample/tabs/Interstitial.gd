@@ -83,7 +83,13 @@ func _on_ad_loaded(ad: InterstitialAd) -> void:
 	_log("Ad loaded successfully (UID: %s)" % str(ad._uid))
 	ad.full_screen_content_callback = _content_callback
 	ad.on_ad_paid = func(ad_value: AdValue) -> void:
-		_log("Ad paid: %f %s (precision: %d)" % [ad_value.value_micros / 1000000.0, ad_value.currency_code, ad_value.precision_type])
+		var ad_source_name := "N/A"
+		if ad_value.response_info:
+			if ad_value.response_info.loaded_adapter_response_info:
+				ad_source_name = ad_value.response_info.loaded_adapter_response_info.ad_source_name
+			else:
+				ad_source_name = "None"
+		_log("Ad paid: %f %s (precision: %d, source: %s)" % [ad_value.value_micros / 1000000.0, ad_value.currency_code, ad_value.precision_type, ad_source_name])
 	_interstitial_ad = ad
 	_update_ui_state(true)
 #endregion

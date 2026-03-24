@@ -29,12 +29,14 @@ namespace PoingStudios.AdMob.Api.Core
         public string CurrencyCode { get; }
         public int PrecisionType { get; }
         public long ValueMicros { get; }
+        public ResponseInfo ResponseInfo { get; }
 
-        public AdValue(string currencyCode, int precisionType, long valueMicros)
+        public AdValue(string currencyCode, int precisionType, long valueMicros, ResponseInfo responseInfo)
         {
             CurrencyCode = currencyCode;
             PrecisionType = precisionType;
             ValueMicros = valueMicros;
+            ResponseInfo = responseInfo;
         }
 
         public static AdValue Create(Dictionary adValueDictionary)
@@ -42,8 +44,9 @@ namespace PoingStudios.AdMob.Api.Core
             var currencyCode = (string)adValueDictionary["currency_code"];
             var precisionType = (int)adValueDictionary["precision_type"];
             var valueMicros = (long)adValueDictionary["value_micros"];
+            var responseInfo = ResponseInfo.Create(adValueDictionary.ContainsKey("response_info") ? (Dictionary)adValueDictionary["response_info"] : null);
 
-            return new AdValue(currencyCode, precisionType, valueMicros);
+            return new AdValue(currencyCode, precisionType, valueMicros, responseInfo);
         }
     }
 }

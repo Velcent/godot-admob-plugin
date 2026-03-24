@@ -71,7 +71,13 @@ func _load_banner(hide_immediately: bool = false) -> void:
 	_ad_view = AdView.new(_get_ad_unit_id(), ad_size, _ad_position)
 	_ad_view.ad_listener = _ad_listener
 	_ad_view.on_ad_paid = func(ad_value: AdValue) -> void:
-		_log("Ad paid: %f %s (precision: %d)" % [ad_value.value_micros / 1000000.0, ad_value.currency_code, ad_value.precision_type])
+		var ad_source_name := "N/A"
+		if ad_value.response_info:
+			if ad_value.response_info.loaded_adapter_response_info:
+				ad_source_name = ad_value.response_info.loaded_adapter_response_info.ad_source_name
+			else:
+				ad_source_name = "None"
+		_log("Ad paid: %f %s (precision: %d, source: %s)" % [ad_value.value_micros / 1000000.0, ad_value.currency_code, ad_value.precision_type, ad_source_name])
 	
 	_is_hidden = hide_immediately
 	if _is_hidden:

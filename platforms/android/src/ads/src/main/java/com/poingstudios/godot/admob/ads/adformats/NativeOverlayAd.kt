@@ -111,7 +111,9 @@ class NativeOverlayAd(
                 }
                 mNativeAd = nativeAd
                 nativeAd.setOnPaidEventListener { adValue ->
-                    emitSignal(godot, pluginName, SignalInfos.onAdPaid, uid, adValue.convertToGodotDictionary())
+                    val adValueDictionary = adValue.convertToGodotDictionary()
+                    adValueDictionary["response_info"] = nativeAd.responseInfo?.convertToGodotDictionary() ?: Dictionary()
+                    emitSignal(godot, pluginName, SignalInfos.onAdPaid, uid, adValueDictionary)
                 }
             }
 

@@ -82,7 +82,9 @@ class PoingGodotAdMobAppOpenAd(godot: Godot?) : org.godotengine.godot.plugin.God
                 override fun onAdLoaded(ad: AppOpenAd) {
                     appOpenAds[uid] = ad
                     ad.setOnPaidEventListener { adValue ->
-                        emitSignal("on_app_open_ad_paid", uid, adValue.convertToGodotDictionary())
+                        val adValueDictionary = adValue.convertToGodotDictionary()
+                adValueDictionary["response_info"] = appOpenAd.responseInfo?.convertToGodotDictionary() ?: Dictionary()
+                emitSignal("on_app_open_ad_paid", uid, adValueDictionary)
                     }
                     ad.fullScreenContentCallback = object : FullScreenContentCallback() {
                         override fun onAdDismissedFullScreenContent() {

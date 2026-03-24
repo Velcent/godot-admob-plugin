@@ -25,16 +25,19 @@ class_name AdValue
 var currency_code : String
 var precision_type : int
 var value_micros : int
+var response_info : ResponseInfo
 
-func _init(currency_code : String, precision_type : int, value_micros : int):
+func _init(currency_code : String, precision_type : int, value_micros : int, response_info : ResponseInfo = null):
 	self.currency_code = currency_code
 	self.precision_type = precision_type
 	self.value_micros = value_micros
+	self.response_info = response_info
 
 
 static func create(ad_value_dictionary : Dictionary) -> AdValue:
 	var currency_code : String = ad_value_dictionary["currency_code"]
 	var precision_type : int = ad_value_dictionary["precision_type"]
 	var value_micros : int = ad_value_dictionary["value_micros"]
+	var response_info : ResponseInfo = ResponseInfo.create(ad_value_dictionary.get("response_info", {}))
 	
-	return AdValue.new(currency_code, precision_type, value_micros)
+	return AdValue.new(currency_code, precision_type, value_micros, response_info)

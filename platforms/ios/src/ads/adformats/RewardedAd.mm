@@ -49,9 +49,11 @@
         self.rewarded.paidEventHandler = ^(GADAdValue *_Nonnull value) {
             RewardedAd *strongSelf = weakSelf;
             if (strongSelf) {
+                Dictionary adValueDictionary = [ObjectToGodotDictionary convertGADAdValueToDictionary:value];
+                adValueDictionary["response_info"] = [ObjectToGodotDictionary convertResponseInfoToDictionary:strongSelf.rewarded.responseInfo];
                 PoingGodotAdMobRewardedAd::get_singleton()->emit_signal("on_rewarded_ad_paid",
                                                                              [strongSelf.UID intValue],
-                                                                             [ObjectToGodotDictionary convertGADAdValueToDictionary:value]);
+                                                                             adValueDictionary);
             }
         };
         

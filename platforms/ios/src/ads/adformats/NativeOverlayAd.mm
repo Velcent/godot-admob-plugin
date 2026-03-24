@@ -294,9 +294,11 @@
     _nativeAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
         NativeOverlayAd *strongSelf = weakSelf;
         if (strongSelf) {
+            Dictionary adValueDictionary = [ObjectToGodotDictionary convertGADAdValueToDictionary:value];
+            adValueDictionary["response_info"] = [ObjectToGodotDictionary convertResponseInfoToDictionary:strongSelf->_nativeAd.responseInfo];
             PoingGodotAdMobNativeOverlayAd::get_singleton()->emit_signal("on_native_overlay_ad_paid",
                                                                          [strongSelf.UID intValue],
-                                                                         [ObjectToGodotDictionary convertGADAdValueToDictionary:value]);
+                                                                         adValueDictionary);
         }
     };
 
