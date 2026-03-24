@@ -61,8 +61,8 @@ static NSString *_Nonnull const GADTBlue = @"#5C84F0";
 - (instancetype)initWithFrame:(CGRect)frame {
   if (self = [super initWithFrame:frame]) {
     _rootView = [NSBundle.mainBundle loadNibNamed:NSStringFromClass([self class])
-                                            owner:self
-                                          options:nil]
+                                             owner:self
+                                           options:nil]
                     .firstObject;
 
     [self addSubview:_rootView];
@@ -72,13 +72,30 @@ static NSString *_Nonnull const GADTBlue = @"#5C84F0";
                            constraintsWithVisualFormat:@"H:|[_rootView]|"
                                                options:0
                                                metrics:nil
-                                                 views:NSDictionaryOfVariableBindings(_rootView)]];
+                                                  views:NSDictionaryOfVariableBindings(_rootView)]];
     [self
         addConstraints:[NSLayoutConstraint
                            constraintsWithVisualFormat:@"V:|[_rootView]|"
                                                options:0
                                                metrics:nil
-                                                 views:NSDictionaryOfVariableBindings(_rootView)]];
+                                                  views:NSDictionaryOfVariableBindings(_rootView)]];
+
+    // Bridge outlets from _rootView to self so Google SDK can track clicks.
+    if ([_rootView isKindOfClass:[GADNativeAdView class]]) {
+      GADNativeAdView *adView = (GADNativeAdView *)_rootView;
+      self.callToActionView = adView.callToActionView;
+      self.headlineView = adView.headlineView;
+      self.bodyView = adView.bodyView;
+      self.advertiserView = adView.advertiserView;
+      self.storeView = adView.storeView;
+      self.iconView = adView.iconView;
+      self.starRatingView = adView.starRatingView;
+      self.mediaView = adView.mediaView;
+      if ([_rootView isKindOfClass:[GADTTemplateView class]]) {
+        self.adBadge = ((GADTTemplateView *)_rootView).adBadge;
+      }
+    }
+
     [self applyStyles];
     [self styleAdBadge];
   }
