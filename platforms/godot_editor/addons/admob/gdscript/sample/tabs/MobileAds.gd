@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-extends VBoxContainer
+extends "res://addons/admob/gdscript/sample/tabs/BaseTab.gd"
 
 const Registry = preload("res://addons/admob/internal/sample_registry.gd")
 

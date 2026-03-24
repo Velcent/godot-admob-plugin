@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://d7v9s82p5d6xs"]
 
 [ext_resource type="Script" path="res://addons/admob/gdscript/sample/tabs/AppOpen.gd" id="1_app_open"]
 

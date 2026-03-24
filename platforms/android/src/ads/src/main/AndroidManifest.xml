@@ -34,6 +34,9 @@
         <meta-data
             android:name="org.godotengine.plugin.v2.PoingGodotAdMobAppOpenAd"
             android:value="com.poingstudios.godot.admob.ads.PoingGodotAdMobAppOpenAd" />
+        <meta-data
+            android:name="org.godotengine.plugin.v2.PoingGodotAdMobNativeOverlayAd"
+            android:value="com.poingstudios.godot.admob.ads.PoingGodotAdMobNativeOverlayAd" />
     </application>
 
 </manifest>

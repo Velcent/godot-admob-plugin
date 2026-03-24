@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-extends VBoxContainer
+extends "res://addons/admob/gdscript/sample/tabs/BaseTab.gd"
 
 const Registry = preload("res://addons/admob/internal/sample_registry.gd")
 
@@ -39,6 +39,7 @@ var _is_hidden := false
 @onready var _y_value: LineEdit = %YValue
 
 func _ready() -> void:
+	super()
 	_ad_listener.on_ad_clicked = _on_ad_clicked
 	_ad_listener.on_ad_closed = _on_ad_closed
 	_ad_listener.on_ad_failed_to_load = _on_ad_failed_to_load

@@ -26,7 +26,7 @@ using PoingStudios.AdMob.Api.Core;
 using PoingStudios.AdMob.Api.Listeners;
 using PoingStudios.AdMob.Sample;
 
-public partial class Banner : VBoxContainer
+public partial class Banner : BaseTab
 {
 	private const string AdUnitIdAndroid = "ca-app-pub-3940256099942544/6300978111";
 	private const string AdUnitIdIos = "ca-app-pub-3940256099942544/2934735716";
@@ -49,6 +49,7 @@ public partial class Banner : VBoxContainer
 
 	public override void _Ready()
 	{
+		base._Ready();
 		_loadBtn = GetNode<Button>("%BannerActions/LoadBanner");
 		_loadBackgroundBtn = GetNode<Button>("%BannerActions/LoadBannerBackground");
 		_destroyBtn = GetNode<Button>("%BannerActions/DestroyBanner");

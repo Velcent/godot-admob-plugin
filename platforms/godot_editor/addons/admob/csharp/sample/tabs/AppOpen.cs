@@ -28,7 +28,7 @@ using PoingStudios.AdMob.Sample;
 
 namespace PoingStudios.AdMob.Sample
 {
-    public partial class AppOpen : VBoxContainer
+    public partial class AppOpen : BaseTab
     {
         private AppOpenAd _appOpenAd;
         private readonly AppOpenAdLoadCallback _loadCallback = new AppOpenAdLoadCallback();
@@ -41,6 +41,7 @@ namespace PoingStudios.AdMob.Sample
 
         public override void _Ready()
         {
+            base._Ready();
             _loadButton = GetNode<Button>("Load");
             _showButton = GetNode<Button>("Show");
             _destroyButton = GetNode<Button>("Destroy");

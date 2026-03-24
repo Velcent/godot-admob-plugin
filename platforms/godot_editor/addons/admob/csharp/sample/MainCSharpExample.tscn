@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://c1p3ju4a5gwe3" path="res://addons/admob/assets/donate/Ko-fi_Logo_RGB_ColorBg.png" id="6_kofi"]
 [ext_resource type="Texture2D" uid="uid://jksg4sbkq0p7" path="res://addons/admob/assets/donate/PayPal.svg" id="7_paypal"]
 [ext_resource type="PackedScene" uid="uid://b2qsjw7krh5ik" path="res://addons/admob/csharp/sample/tabs/Banner.tscn" id="8_banner"]
+[ext_resource type="PackedScene" path="res://addons/admob/csharp/sample/tabs/Native.tscn" id="17_native"]
 [ext_resource type="PackedScene" uid="uid://3ry3keuwu2vs" path="res://addons/admob/csharp/sample/tabs/Interstitial.tscn" id="9_interstitial"]
 [ext_resource type="PackedScene" path="res://addons/admob/csharp/sample/tabs/AppOpen.tscn" id="16_app_open"]
 [ext_resource type="PackedScene" path="res://addons/admob/csharp/sample/tabs/Rewarded.tscn" id="10_rewarded"]
@@ -156,43 +157,91 @@ layout_mode = 2
 size_flags_vertical = 3
 current_tab = 0
 
-[node name="Banner" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs" unique_id=6984217 instance=ExtResource("8_banner")]
+[node name="Banner" type="ScrollContainer" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs"]
 layout_mode = 2
+horizontal_scroll_mode = 0
 metadata/_tab_index = 0
 
-[node name="AppOpen" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs" unique_id=987654321 instance=ExtResource("16_app_open")]
-visible = false
+[node name="BannerContent" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs/Banner" instance=ExtResource("8_banner")]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Native" type="ScrollContainer" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs"]
+layout_mode = 2
+horizontal_scroll_mode = 0
 metadata/_tab_index = 1
 
-[node name="Interstitial" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs" unique_id=919643521 instance=ExtResource("9_interstitial")]
+[node name="NativeContent" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs/Native" instance=ExtResource("17_native")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AppOpen" type="ScrollContainer" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs"]
 visible = false
 layout_mode = 2
+horizontal_scroll_mode = 0
 metadata/_tab_index = 2
 
-[node name="Rewarded" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs" unique_id=1324350768 instance=ExtResource("10_rewarded")]
+[node name="AppOpenContent" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs/AppOpen" instance=ExtResource("16_app_open")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Interstitial" type="ScrollContainer" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs"]
 visible = false
 layout_mode = 2
+horizontal_scroll_mode = 0
 metadata/_tab_index = 3
 
-[node name="RewardedInterstitial" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs" unique_id=397044949 instance=ExtResource("11_rewarded_interstitial")]
+[node name="InterstitialContent" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs/Interstitial" instance=ExtResource("9_interstitial")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Rewarded" type="ScrollContainer" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs"]
 visible = false
 layout_mode = 2
+horizontal_scroll_mode = 0
 metadata/_tab_index = 4
 
-[node name="UMP" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs" unique_id=1016787023 instance=ExtResource("12_ump")]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-offset_left = -20.0
-offset_right = 20.0
+[node name="RewardedContent" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs/Rewarded" instance=ExtResource("10_rewarded")]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RewardedInterstitial" type="ScrollContainer" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
 metadata/_tab_index = 5
 
-[node name="MobileAds" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs" unique_id=263308449 instance=ExtResource("14_mobile_ads_scene")]
+[node name="RewardedInterstitialContent" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs/RewardedInterstitial" instance=ExtResource("11_rewarded_interstitial")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="UMP" type="ScrollContainer" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs"]
 visible = false
 layout_mode = 2
+horizontal_scroll_mode = 0
 metadata/_tab_index = 6
+
+[node name="UMPContent" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs/UMP" instance=ExtResource("12_ump")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MobileAds" type="ScrollContainer" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+metadata/_tab_index = 7
+
+[node name="MobileAdsContent" parent="Background/SafeArea/LayoutContainer/TabContent/MainTabs/MobileAds" instance=ExtResource("14_mobile_ads_scene")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="ConsolePanel" type="PanelContainer" parent="Background/SafeArea/LayoutContainer" unique_id=405248162]
 custom_minimum_size = Vector2(0, 250)

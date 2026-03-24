@@ -26,7 +26,7 @@ using PoingStudios.AdMob.Api.Core;
 using PoingStudios.AdMob.Api.Listeners;
 using PoingStudios.AdMob.Sample;
 
-public partial class Rewarded : VBoxContainer
+public partial class Rewarded : BaseTab
 {
 	private const string AdUnitIdAndroid = "ca-app-pub-3940256099942544/5224354917";
 	private const string AdUnitIdIos = "ca-app-pub-3940256099942544/1712485313";
@@ -41,6 +41,7 @@ public partial class Rewarded : VBoxContainer
 
 	public override void _Ready()
 	{
+		base._Ready();
 		_loadBtn = GetNode<Button>("Load");
 		_showBtn = GetNode<Button>("Show");
 		_destroyBtn = GetNode<Button>("Destroy");

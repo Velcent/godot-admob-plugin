@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-extends VBoxContainer
+extends "res://addons/admob/gdscript/sample/tabs/BaseTab.gd"
 
 const Registry = preload("res://addons/admob/internal/sample_registry.gd")
 
@@ -33,6 +33,7 @@ var _content_callback := FullScreenContentCallback.new()
 @onready var _destroy_button: Button = $Destroy
 
 func _ready() -> void:
+	super()
 	_load_callback.on_ad_failed_to_load = _on_ad_failed_to_load
 	_load_callback.on_ad_loaded = _on_ad_loaded
 

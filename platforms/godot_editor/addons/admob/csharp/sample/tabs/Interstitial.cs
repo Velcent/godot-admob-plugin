@@ -26,7 +26,7 @@ using PoingStudios.AdMob.Api.Core;
 using PoingStudios.AdMob.Api.Listeners;
 using PoingStudios.AdMob.Sample;
 
-public partial class Interstitial : VBoxContainer
+public partial class Interstitial : BaseTab
 {
 	private const string AdUnitIdAndroid = "ca-app-pub-3940256099942544/1033173712";
 	private const string AdUnitIdIos = "ca-app-pub-3940256099942544/4411468910";
@@ -41,6 +41,7 @@ public partial class Interstitial : VBoxContainer
 
 	public override void _Ready()
 	{
+		base._Ready();
 		_loadBtn = GetNode<Button>("Load");
 		_showBtn = GetNode<Button>("Show");
 		_destroyBtn = GetNode<Button>("Destroy");

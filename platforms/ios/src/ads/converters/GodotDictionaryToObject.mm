@@ -91,16 +91,30 @@
     Array keys = extrasParameters.keys();
     int size = keys.size();
     for (int i = 0; i < size; ++i) {
-        String key = keys[i];
-        String value = extrasParameters[key];
-        NSString *nsKey = [NSString stringWithUTF8String:key.utf8().get_data()];
-        NSString *nsValue = [NSString stringWithUTF8String:value.utf8().get_data()];
+        Variant key = keys[i];
+        Variant value = extrasParameters[key];
+        
+        NSString *nsKey = [NSString stringWithUTF8String:((String)key).utf8().get_data()];
+        id nsValue = nil;
+        
+        if (value.get_type() == Variant::NIL) {
+            nsValue = [NSNull null];
+        } else if (value.get_type() == Variant::DICTIONARY) {
+            nsValue = [GodotDictionaryToObject convertDictionaryToNSDictionary:(Dictionary)value];
+        } else if (value.get_type() == Variant::INT || value.get_type() == Variant::FLOAT) {
+            nsValue = [NSNumber numberWithDouble:(double)value];
+        } else if (value.get_type() == Variant::BOOL) {
+            nsValue = [NSNumber numberWithBool:(bool)value];
+        } else {
+            nsValue = [NSString stringWithUTF8String:((String)value).utf8().get_data()];
+        }
 
-        [nsDictionary setValue:nsValue forKey:nsKey];
+        if (nsValue) {
+            [nsDictionary setValue:nsValue forKey:nsKey];
+        }
     }
 
     return nsDictionary;
-    
 }
 
 + (GADServerSideVerificationOptions *)convertDictionaryToGADServerSideVerificationOptions:(Dictionary)serverSideVerificationOptionsDictionary {
