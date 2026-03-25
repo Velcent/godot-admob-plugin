@@ -165,7 +165,7 @@ public partial class Banner : BaseTab
 		_adView.OnAdPaid = adValue =>
 		{
 			string adSourceName = adValue.ResponseInfo?.LoadedAdapterResponseInfo?.AdSourceName ?? "N/A";
-			Log(string.Format("Ad paid: {0:F} {1} (precision: {2}, source: {3})", adValue.ValueMicros / 1000000.0, adValue.CurrencyCode, adValue.PrecisionType, adSourceName));
+			Log(string.Format("Ad paid: {0:F} {1} (precision: {2}, source: {3})", adValue.ValueMicros / 1000000.0, adValue.CurrencyCode, adValue.Precision, adSourceName));
 		};
 		_adView.LoadAd(new AdRequest());
 	}

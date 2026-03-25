@@ -1,265 +1,231 @@
 # Impression-Level Ad Revenue
 
-Impression-Level Ad Revenue (ILAR) lets you estimate ad revenue on the client side at the impression level, enabling decisions such as whether to show an ad based on expected value.
+When an impression occurs, Godot AdMob Plugin provides ad revenue data associated with that impression. You can use the data to calculate a user's lifetime value, or forward the data downstream to other relevant systems.
 
-This document is based on:
-
-- [Google Mobile Ads SDK Android Documentation](https://developers.google.com/admob/android/impression-level-ad-revenue)
+This guide is intended to help you implement the impression-level ad revenue data capture in your Godot project.
 
 ## Prerequisites
-- Complete the [Get started guide](../README.md)
+- Make sure you have [turned on the impression-level ad revenue feature](https://support.google.com/admob/answer/11322405) in the AdMob UI.
+- Complete [Get Started](../README.md). Your Godot project should already have the Poing Studios AdMob plugin imported and configured.
+- Before you can receive any impression-level ad revenue data, you need to implement at least one ad format:
+    - [App open](../ad_formats/app_open.md)
+    - [Banner](../ad_formats/banner/get_started.md)
+    - [Interstitial](../ad_formats/interstitial.md)
+    - [Rewarded](../ad_formats/rewarded.md)
+    - [Rewarded interstitial](../ad_formats/rewarded_interstitial.md)
+    - [Native](../ad_formats/native_overlay.md)
 
-## Overview
+## Implementing a paid event handler
 
-When an ad is successfully loaded, you can get notified with estimated revenue data via the `on_ad_paid` callback. The callback receives an `AdValue` object containing:
+Each ad format has an `on_ad_paid` (`OnAdPaid` in C#) event. During the lifecycle of an ad event, the Godot AdMob Plugin monitors impression events and invokes the handler with an `AdValue` representing the earned value.
 
-| Property | Type | Description |
-|---|---|---|
-| `value_micros` | `int` | Estimated revenue in micro-units of the currency |
-| `currency_code` | `String` | ISO 4217 currency code (e.g. `"USD"`) |
-| `precision_type` | `int` | Precision of the revenue estimate (see below) |
-
-### Precision Types
-
-| Value | Name | Description |
-|---|---|---|
-| `0` | `UNKNOWN` | An unknown precision type |
-| `1` | `ESTIMATED` | Estimated from aggregated campaign data |
-| `2` | `PUBLISHER_PROVIDED` | The publisher has provided the CPM |
-| `3` | `PRECISE` | Mediation or bidding ad event with exact value |
-
-## Supported Ad Formats
-
-`on_ad_paid` is available for all ad formats:
-
-- App Open
-- Banner (`AdView`)
-- Interstitial
-- Rewarded
-- Rewarded Interstitial
-- Native Overlay
-
-## Usage
-
-Set the `on_ad_paid` callback **before** loading the ad. Below are examples for each format.
-
-### Interstitial
-
-=== "GDScript"
-
-    ```gdscript
-    var _interstitial_ad: InterstitialAd
-
-    func _load_interstitial() -> void:
-        var ad_unit_id := "ca-app-pub-3940256099942544/1033173712" if OS.get_name() == "Android" \
-            else "ca-app-pub-3940256099942544/4411468910"
-        InterstitialAdLoader.new().load(ad_unit_id, AdRequest.new(), func(interstitial_ad: InterstitialAd, _error):
-            _interstitial_ad = interstitial_ad
-            _interstitial_ad.on_ad_paid = func(ad_value: AdValue) -> void:
-                print("Interstitial paid: %d %s (precision: %d)" % [
-                    ad_value.value_micros, ad_value.currency_code, ad_value.precision_type
-                ])
-        )
-    ```
-
-=== "C#"
-
-    ```csharp linenums="1"
-    using PoingStudios.AdMob.Api;
-    using PoingStudios.AdMob.Api.Core;
-
-    private InterstitialAd _interstitialAd;
-
-    private void LoadInterstitial()
-    {
-        string adUnitId = OS.GetName() == "Android"
-            ? "ca-app-pub-3940256099942544/1033173712"
-            : "ca-app-pub-3940256099942544/4411468910";
-
-        InterstitialAdLoader.Load(adUnitId, new AdRequest(), (interstitialAd, error) =>
-        {
-            _interstitialAd = interstitialAd;
-            _interstitialAd.OnAdPaid += HandleAdPaidEvent;
-        });
-    }
-
-    private void HandleAdPaidEvent(AdValue adValue)
-    {
-        GD.Print($"Interstitial paid: {adValue.ValueMicros} {adValue.CurrencyCode} (precision: {adValue.PrecisionType})");
-    }
-    ```
-
-### Rewarded
+The following example handles paid events for a rewarded ad:
 
 === "GDScript"
 
     ```gdscript
     var _rewarded_ad: RewardedAd
 
-    func _load_rewarded() -> void:
-        var ad_unit_id := "ca-app-pub-3940256099942544/5224354917" if OS.get_name() == "Android" \
-            else "ca-app-pub-3940256099942544/1712485313"
-        RewardedAdLoader.new().load(ad_unit_id, AdRequest.new(), func(rewarded_ad: RewardedAd, _error):
+    func _load_rewarded_ad() -> void:
+        # Send the request to load the ad.
+        var ad_request := AdRequest.new()
+        RewardedAdLoader.new().load("AD_UNIT_ID", ad_request, func(rewarded_ad: RewardedAd, error: LoadAdError):
+            # If the operation failed with a reason.
+            if error != null:
+                push_error("Rewarded ad failed to load an ad with error: %s" % error.message)
+                return
+            
             _rewarded_ad = rewarded_ad
-            _rewarded_ad.on_ad_paid = func(ad_value: AdValue) -> void:
-                print("Rewarded paid: %d %s" % [ad_value.value_micros, ad_value.currency_code])
+            _rewarded_ad.on_ad_paid = _handle_ad_paid_event
         )
+
+    func _handle_ad_paid_event(ad_value: AdValue) -> void:
+        # TODO: Send the impression-level ad revenue information to your
+        # preferred analytics server directly within this callback.
+
+        var value_micros: int = ad_value.value_micros
+        var currency: String = ad_value.currency_code
+        var precision := ad_value.precision # (AdValue.PrecisionType)
+        var response_info: ResponseInfo = ad_value.response_info
+        var response_id: String = response_info.response_id
+
+        var loaded_adapter_response_info: AdapterResponseInfo = response_info.loaded_adapter_response_info
+        if loaded_adapter_response_info:
+            var ad_source_id: String = loaded_adapter_response_info.ad_source_id
+            var ad_source_instance_id: String = loaded_adapter_response_info.ad_source_instance_id
+            var ad_source_instance_name: String = loaded_adapter_response_info.ad_source_instance_name
+            var ad_source_name: String = loaded_adapter_response_info.ad_source_name
+            var adapter_class_name: String = loaded_adapter_response_info.adapter_class_name
+            var latency_millis: int = loaded_adapter_response_info.latency_millis
+            var credentials: Dictionary = loaded_adapter_response_info.ad_unit_mapping
+        
+        var extras: Dictionary = response_info.response_extras
+        var mediation_group_name = extras.get("mediation_group_name", "")
+        var mediation_ab_test_name = extras.get("mediation_ab_test_name", "")
+        var mediation_ab_test_variant = extras.get("mediation_ab_test_variant", "")
     ```
 
 === "C#"
 
     ```csharp linenums="1"
+    using Godot;
+    using Godot.Collections;
+    using PoingStudios.AdMob.Api;
+    using PoingStudios.AdMob.Api.Core;
+
     private RewardedAd _rewardedAd;
 
-    private void LoadRewarded()
+    private void LoadRewardedAd()
     {
-        string adUnitId = OS.GetName() == "Android"
-            ? "ca-app-pub-3940256099942544/5224354917"
-            : "ca-app-pub-3940256099942544/1712485313";
-
-        RewardedAdLoader.Load(adUnitId, new AdRequest(), (rewardedAd, error) =>
+        // Send the request to load the ad.
+        AdRequest adRequest = new AdRequest();
+        RewardedAdLoader.Load("AD_UNIT_ID", adRequest, (rewardedAd, error) =>
         {
-            _rewardedAd = rewardedAd;
-            _rewardedAd.OnAdPaid += adValue =>
-                GD.Print($"Rewarded paid: {adValue.ValueMicros} {adValue.CurrencyCode}");
-        });
-    }
-    ```
-
-### Rewarded Interstitial
-
-=== "GDScript"
-
-    ```gdscript
-    var _rewarded_interstitial_ad: RewardedInterstitialAd
-
-    func _load_rewarded_interstitial() -> void:
-        var ad_unit_id := "ca-app-pub-3940256099942544/5354046379" if OS.get_name() == "Android" \
-            else "ca-app-pub-3940256099942544/6978759866"
-        RewardedInterstitialAdLoader.new().load(ad_unit_id, AdRequest.new(), func(ad: RewardedInterstitialAd, _error):
-            _rewarded_interstitial_ad = ad
-            _rewarded_interstitial_ad.on_ad_paid = func(ad_value: AdValue) -> void:
-                print("RewardedInterstitial paid: %d %s" % [ad_value.value_micros, ad_value.currency_code])
-        )
-    ```
-
-=== "C#"
-
-    ```csharp linenums="1"
-    private RewardedInterstitialAd _rewardedInterstitialAd;
-
-    private void LoadRewardedInterstitial()
-    {
-        string adUnitId = OS.GetName() == "Android"
-            ? "ca-app-pub-3940256099942544/5354046379"
-            : "ca-app-pub-3940256099942544/6978759866";
-
-        RewardedInterstitialAdLoader.Load(adUnitId, new AdRequest(), (ad, error) =>
-        {
-            _rewardedInterstitialAd = ad;
-            _rewardedInterstitialAd.OnAdPaid += adValue =>
-                GD.Print($"RewardedInterstitial paid: {adValue.ValueMicros} {adValue.CurrencyCode}");
-        });
-    }
-    ```
-
-### Banner (AdView)
-
-=== "GDScript"
-
-    ```gdscript
-    var _ad_view: AdView
-
-    func _load_banner() -> void:
-        var ad_unit_id := "ca-app-pub-3940256099942544/6300978111" if OS.get_name() == "Android" \
-            else "ca-app-pub-3940256099942544/2934735716"
-        _ad_view = AdView.new(ad_unit_id, AdSize.BANNER, AdPosition.new(AdPosition.Values.BOTTOM))
-        _ad_view.on_ad_paid = func(ad_value: AdValue) -> void:
-            print("Banner paid: %d %s" % [ad_value.value_micros, ad_value.currency_code])
-        _ad_view.load_ad(AdRequest.new())
-    ```
-
-=== "C#"
-
-    ```csharp linenums="1"
-    private AdView _adView;
-
-    private void LoadBanner()
-    {
-        string adUnitId = OS.GetName() == "Android"
-            ? "ca-app-pub-3940256099942544/6300978111"
-            : "ca-app-pub-3940256099942544/2934735716";
-
-        _adView = new AdView(adUnitId, AdSize.Banner, new AdPosition(AdPosition.Values.Bottom));
-        _adView.OnAdPaid += adValue =>
-            GD.Print($"Banner paid: {adValue.ValueMicros} {adValue.CurrencyCode}");
-        _adView.LoadAd(new AdRequest());
-    }
-    ```
-
-### App Open
-
-=== "GDScript"
-
-    ```gdscript
-    func _on_app_open_ad_loaded(app_open_ad: AppOpenAd) -> void:
-        app_open_ad.on_ad_paid = func(ad_value: AdValue) -> void:
-            print("AppOpen paid: %d %s" % [ad_value.value_micros, ad_value.currency_code])
-    ```
-
-=== "C#"
-
-    ```csharp linenums="1"
-    private void OnAppOpenAdLoaded(AppOpenAd appOpenAd, LoadAdError error)
-    {
-        appOpenAd.OnAdPaid += adValue =>
-            GD.Print($"AppOpen paid: {adValue.ValueMicros} {adValue.CurrencyCode}");
-    }
-    ```
-
-### Native Overlay
-
-=== "GDScript"
-
-    ```gdscript
-    var _native_ad: NativeOverlayAd
-
-    func _load_native() -> void:
-        var ad_unit_id := "ca-app-pub-3940256099942544/2247696110" if OS.get_name() == "Android" \
-            else "ca-app-pub-3940256099942544/3986624511"
-        NativeOverlayAd.load(ad_unit_id, AdRequest.new(), NativeAdOptions.new(), func(native_ad: NativeOverlayAd, _error: LoadAdError):
-            if native_ad:
-                _native_ad = native_ad
-                _native_ad.on_ad_paid = func(ad_value: AdValue) -> void:
-                    print("Native paid: %d %s" % [ad_value.value_micros, ad_value.currency_code])
-        )
-    ```
-
-=== "C#"
-
-    ```csharp linenums="1"
-    private void LoadNative()
-    {
-        string adUnitId = OS.GetName() == "Android"
-            ? "ca-app-pub-3940256099942544/2247696110"
-            : "ca-app-pub-3940256099942544/3986624511";
-
-        NativeOverlayAd.Load(adUnitId, new AdRequest(), new NativeAdOptions(), (nativeAd, error) =>
-        {
-            if (nativeAd != null)
+            // If the operation failed with a reason.
+            if (error != null)
             {
-                nativeAd.OnAdPaid += adValue =>
-                    GD.Print($"Native paid: {adValue.ValueMicros} {adValue.CurrencyCode}");
+                GD.PrintErr("Rewarded ad failed to load an ad with error: " + error.Message);
+                return;
             }
+
+            _rewardedAd = rewardedAd;
+            _rewardedAd.OnAdPaid += HandleAdPaidEvent;
         });
+    }
+
+    private void HandleAdPaidEvent(AdValue adValue)
+    {
+        // TODO: Send the impression-level ad revenue information to your
+        // preferred analytics server directly within this callback.
+
+        long valueMicros = adValue.ValueMicros;
+        string currency = adValue.CurrencyCode;
+        AdValue.PrecisionType precision = adValue.Precision;
+        ResponseInfo responseInfo = adValue.ResponseInfo;
+        string responseId = responseInfo.ResponseId;
+
+        AdapterResponseInfo loadedAdapterResponseInfo = responseInfo.LoadedAdapterResponseInfo;
+        if (loadedAdapterResponseInfo != null)
+        {
+            string adSourceId = loadedAdapterResponseInfo.AdSourceId;
+            string adSourceInstanceId = loadedAdapterResponseInfo.AdSourceInstanceId;
+            string adSourceInstanceName = loadedAdapterResponseInfo.AdSourceInstanceName;
+            string adSourceName = loadedAdapterResponseInfo.AdSourceName;
+            string adapterClassName = loadedAdapterResponseInfo.AdapterClassName;
+            int latencyMillis = loadedAdapterResponseInfo.LatencyMillis;
+            Godot.Collections.Dictionary credentials = loadedAdapterResponseInfo.AdUnitMapping;
+        }
+
+        Godot.Collections.Dictionary extras = responseInfo.ResponseExtras;
+        string mediationGroupName = extras.ContainsKey("mediation_group_name") ? extras["mediation_group_name"].ToString() : "";
+        string mediationABTestName = extras.ContainsKey("mediation_ab_test_name") ? extras["mediation_ab_test_name"].ToString() : "";
+        string mediationABTestVariant = extras.ContainsKey("mediation_ab_test_variant") ? extras["mediation_ab_test_variant"].ToString() : "";
     }
     ```
 
-## AdValue Reference
+## Identify a custom event ad source name
 
-| GDScript | C# | Type | Description |
-|---|---|---|---|
-| `ad_value.value_micros` | `adValue.ValueMicros` | `int` / `long` | Revenue in micros (divide by 1,000,000 for actual value) |
-| `ad_value.currency_code` | `adValue.CurrencyCode` | `String` | ISO 4217 currency code |
-| `ad_value.precision_type` | `adValue.PrecisionType` | `int` | Accuracy of the estimate |
-| `ad_value.response_info` | `adValue.ResponseInfo` | `ResponseInfo` | Information about the ad response |
+For custom event ad sources, the `ad_source_name` (`AdSourceName`) property gives you the ad source name Custom Event. If you use multiple custom events, the ad source name isn't granular enough to distinguish between multiple custom events. To locate a specific custom event, do the following steps:
+
+1. Get the `adapter_class_name` (`AdapterClassName`) property.
+2. Set a unique ad source name.
+
+The following example sets a unique ad source name for a custom event:
+
+=== "GDScript"
+
+    ```gdscript
+    func _get_ad_source_name(loaded_adapter_response_info: AdapterResponseInfo) -> String:
+        if loaded_adapter_response_info == null:
+            return ""
+
+        var ad_source_name: String = loaded_adapter_response_info.ad_source_name
+
+        if ad_source_name == "Custom Event":
+            var adapter_class_name: String = loaded_adapter_response_info.adapter_class_name
+            
+            if OS.get_name() == "Android":
+                if adapter_class_name == "com.google.ads.mediation.sample.customevent.SampleCustomEvent":
+                    ad_source_name = "Sample Ad Network (Custom Event)"
+            elif OS.get_name() == "iOS":
+                if adapter_class_name == "SampleCustomEvent":
+                    ad_source_name = "Sample Ad Network (Custom Event)"
+
+        return ad_source_name
+    ```
+
+=== "C#"
+
+    ```csharp linenums="1"
+    private string GetAdSourceName(AdapterResponseInfo loadedAdapterResponseInfo)
+    {
+        if (loadedAdapterResponseInfo == null)
+        {
+            return string.Empty;
+        }
+
+        string adSourceName = loadedAdapterResponseInfo.AdSourceName;
+
+        if (adSourceName == "Custom Event")
+        {
+            string adapterClassName = loadedAdapterResponseInfo.AdapterClassName;
+
+            if (OS.GetName() == "Android")
+            {
+                if (adapterClassName == "com.google.ads.mediation.sample.customevent.SampleCustomEvent")
+                {
+                    adSourceName = "Sample Ad Network (Custom Event)";
+                }
+            }
+            else if (OS.GetName() == "iOS")
+            {
+                if (adapterClassName == "SampleCustomEvent")
+                {
+                    adSourceName = "Sample Ad Network (Custom Event)";
+                }
+            }
+        }
+        return adSourceName;
+    }
+    ```
+
+For more information on the winning ad source, see [Retrieve information about the ad response](https://developers.google.com/admob/android/response-info).
+
+## Integrate with App Attribution Partners (AAP)
+
+For complete details on forwarding ad revenue data to analytics platforms, refer to the partner's guide:
+
+- [Adjust](https://dev.adjust.com/en/sdk/android/integrations/admob)
+- [AppsFlyer](https://support.appsflyer.com/hc/en-us/articles/4416353506833-Integrate-the-ROI360-ad-revenue-SDK-API)
+- [Singular](https://support.singular.net/hc/en-us/articles/360037635452-Unity-SDK-Basic-Integration#42_Adding_Ad_Revenue_Attribution_Support)
+- [Tenjin](https://tenjin.com/docs/en/send-events/android.html#impression-level-ad-revenue-integration)
+
+## Implementation best practices
+
+- Set the `on_ad_paid` (`OnAdPaid`) event immediately once you create or get access to the ad object, and definitely before showing the ad. This makes sure that you don't miss any callbacks.
+- Send the impression-level ad revenue information to your preferred analytics server immediately in your `on_ad_paid` handler. This makes sure that you don't accidentally drop any callbacks and avoids data discrepancies.
+
+## AdValue
+
+!!! tip "Key Point"
+    The value of `AdValue` is a micro value that represents each ad's worth. For example, a value of 5,000 indicates that this ad is estimated to be worth $0.005.
+
+| `AdValue.PrecisionType` | Description |
+|---|---|
+| `UNKNOWN` | An ad value with unknown precision. |
+| `ESTIMATED` | An ad value estimated from aggregated data. |
+| `PUBLISHER_PROVIDED` | A publisher-provided ad value, such as manual CPMs in a mediation group. |
+| `PRECISE` | The precise value paid for this ad. |
+
+In case of mediation, AdMob tries to provide an `ESTIMATED` value for ad sources that are [optimized](https://support.google.com/admob/answer/7374110). For non-optimized ad sources, or in cases where there aren't enough aggregated data to report a meaningful estimation, the `PUBLISHER_PROVIDED` value is returned.
+
+## Test impressions from bidding ad sources
+
+After an impression-level ad revenue event occurs for a bidding ad source through a test request, you receive only the following values:
+
+- `UNKNOWN`: indicates the precision type.
+- `0`: indicates the ad value.
+
+Previously, you might have seen the precision type as a value other than `UNKNOWN` and an ad value more than 0.
+
+For details on sending a test ad request, see [Enable test devices](../enable_test_ads.md).

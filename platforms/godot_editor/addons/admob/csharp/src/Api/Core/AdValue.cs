@@ -26,15 +26,22 @@ namespace PoingStudios.AdMob.Api.Core
 {
     public class AdValue
     {
+        public enum PrecisionType
+        {
+            Unknown = 0,
+            Estimated = 1,
+            PublisherProvided = 2,
+            Precise = 3
+        }
         public string CurrencyCode { get; }
-        public int PrecisionType { get; }
+        public PrecisionType Precision { get; }
         public long ValueMicros { get; }
         public ResponseInfo ResponseInfo { get; }
 
-        public AdValue(string currencyCode, int precisionType, long valueMicros, ResponseInfo responseInfo)
+        public AdValue(string currencyCode, PrecisionType precision, long valueMicros, ResponseInfo responseInfo)
         {
             CurrencyCode = currencyCode;
-            PrecisionType = precisionType;
+            Precision = precision;
             ValueMicros = valueMicros;
             ResponseInfo = responseInfo;
         }
@@ -42,7 +49,7 @@ namespace PoingStudios.AdMob.Api.Core
         public static AdValue Create(Dictionary adValueDictionary)
         {
             var currencyCode = (string)adValueDictionary["currency_code"];
-            var precisionType = (int)adValueDictionary["precision_type"];
+            var precisionType = (PrecisionType)(int)adValueDictionary["precision_type"];
             var valueMicros = (long)adValueDictionary["value_micros"];
             var responseInfo = ResponseInfo.Create(adValueDictionary.ContainsKey("response_info") ? (Dictionary)adValueDictionary["response_info"] : null);
 
