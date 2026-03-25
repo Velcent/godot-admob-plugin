@@ -103,10 +103,10 @@ func _on_ad_loaded(ad: AppOpenAd) -> void:
 	ad.full_screen_content_callback = _content_callback
 	ad.on_ad_paid = func(ad_value: AdValue) -> void:
 		var ad_source_name := "N/A"
-		var response_info := ad.get_response_info()
-		if response_info:
-			if response_info.loaded_adapter_response_info:
-				ad_source_name = response_info.loaded_adapter_response_info.ad_source_name
+		var paid_response_info := ad.get_response_info()
+		if paid_response_info:
+			if paid_response_info.loaded_adapter_response_info:
+				ad_source_name = paid_response_info.loaded_adapter_response_info.ad_source_name
 			else:
 				ad_source_name = "None"
 		_log("Ad paid: %f %s (precision: %d, source: %s)" % [ad_value.value_micros / 1000000.0, ad_value.currency_code, ad_value.precision, ad_source_name])
