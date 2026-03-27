@@ -174,11 +174,15 @@ public partial class Banner : BaseTab
 				SampleRegistry.SafeArea?.ResetAdOverlap();
 			},
 			OnAdClicked = () => Log("Ad clicked"),
-			OnAdOpened = () => Log("Ad opened"),
+			OnAdOpened = () => 
+			{
+				Log("Ad opened");
+				SampleRegistry.SafeArea?.UpdateAdOverlap(_adView);
+			},
 			OnAdClosed = () => 
 			{ 
 				Log("Ad closed"); 
-				SampleRegistry.SafeArea?.ResetAdOverlap();
+				SampleRegistry.SafeArea?.UpdateAdOverlap(_adView);
 			},
 			OnAdImpression = () => Log("Impression recorded"),
 		};

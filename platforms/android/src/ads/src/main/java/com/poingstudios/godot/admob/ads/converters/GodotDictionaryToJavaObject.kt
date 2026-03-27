@@ -125,8 +125,6 @@ fun Dictionary.convertToAdRequest(keywords: Array<String>): AdRequest {
     }
 
     val networkExtrasBundle = Bundle()
-    networkExtrasBundle.putString("is_godot", "1")
-    networkExtrasBundle.putString("adw", "true")
 
     if (adsExtras.isNotEmpty()) {
         for (key in adsExtras.keys) {

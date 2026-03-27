@@ -84,9 +84,7 @@
   if (extrasDictionary.size() > 0) {
     [additionalParameters addEntriesFromDictionary:[GodotDictionaryToObject convertDictionaryToNSDictionary:extrasDictionary]];
   }
-  
-  additionalParameters[@"is_godot"] = @"1";
-  additionalParameters[@"adw"] = @"true";
+
   extras.additionalParameters = additionalParameters;
   [request registerAdNetworkExtras:extras];
 

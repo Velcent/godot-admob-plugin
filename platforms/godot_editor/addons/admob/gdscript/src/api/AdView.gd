@@ -48,8 +48,7 @@ func _init(ad_unit_id: String, ad_size: AdSize, ad_position: AdPosition) -> void
 			},
 			"ad_size": {
 				"width": ad_size.width,
-				"height": ad_size.height,
-				"type": ad_size.type
+				"height": ad_size.height
 			}
 		}
 

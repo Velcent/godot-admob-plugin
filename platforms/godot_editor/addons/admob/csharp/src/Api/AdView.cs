@@ -74,8 +74,7 @@ namespace PoingStudios.AdMob.Api
 					{ "ad_size", new Dictionary
 						{
 							{ "width", adSize.Width },
-							{ "height", adSize.Height },
-							{ "type", (int)adSize.SizeType }
+							{ "height", adSize.Height }
 						}
 					}
 				};

@@ -25,6 +25,8 @@ extends MobileSingletonPlugin
 
 static var _plugin := _get_plugin("PoingGodotAdMobAdSize")
 
+const FULL_WIDTH := -1
+
 static var BANNER := new(320, 50)
 static var FULL_BANNER := new(468, 60)
 static var LARGE_BANNER := new(320, 100)

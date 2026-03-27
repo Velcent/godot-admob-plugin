@@ -159,6 +159,8 @@ func _on_ad_clicked() -> void:
 
 func _on_ad_closed() -> void:
 	_log("Ad closed")
+	if Registry.safe_area:
+		Registry.safe_area.update_ad_overlap(_ad_view)
 
 func _on_ad_impression() -> void:
 	_log("Ad impression recorded")
@@ -175,6 +177,8 @@ func _on_ad_loaded() -> void:
 
 func _on_ad_opened() -> void:
 	_log("Ad opened")
+	if Registry.safe_area:
+		Registry.safe_area.update_ad_overlap(_ad_view)
 #endregion
 
 func _update_position(new_position: AdPosition) -> void:
