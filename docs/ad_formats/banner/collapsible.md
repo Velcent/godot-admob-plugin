@@ -55,8 +55,7 @@ If you want to load another collapsible banner ad later in the session, you can 
 Non-collapsible banner ads are eligible to return for collapsible banner requests to maximize performance. Call `is_collapsible()` (or `IsCollapsible()` in C#) to check if the last banner loaded is collapsible.
 
 === "GDScript"
-
-    ```gdscript linenums="1" hl_lines="4"
+    ```gdscript linenums="1" hl_lines="6"
     func _ready() -> void:
     	# ...
     	_ad_view.ad_listener.on_ad_loaded = _on_ad_loaded
@@ -67,8 +66,7 @@ Non-collapsible banner ads are eligible to return for collapsible banner request
     ```
 
 === "C#"
-
-    ```csharp linenums="1" hl_lines="5"
+    ```csharp linenums="1" hl_lines="7"
     private void RegisterAdListener()
     {
     	_adView.AdListener = new AdListener
