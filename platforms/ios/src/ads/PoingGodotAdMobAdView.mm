@@ -137,6 +137,13 @@ int PoingGodotAdMobAdView::get_height_in_pixels(int uid) {
     return -1;
 }
 
+bool PoingGodotAdMobAdView::is_collapsible(int uid) {
+    BannerAd* bannerAd = getObject(uid);
+    if (bannerAd) {
+        return [bannerAd isCollapsible];
+    }
+    return false;
+}
 
 Dictionary PoingGodotAdMobAdView::get_response_info(int uid) {
     BannerAd* adObj = this->getObject(uid);
@@ -159,6 +166,7 @@ void PoingGodotAdMobAdView::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_height"),            &PoingGodotAdMobAdView::get_height);
     ClassDB::bind_method(D_METHOD("get_width_in_pixels"),   &PoingGodotAdMobAdView::get_width_in_pixels);
     ClassDB::bind_method(D_METHOD("get_height_in_pixels"),  &PoingGodotAdMobAdView::get_height_in_pixels);
+    ClassDB::bind_method(D_METHOD("is_collapsible"),        &PoingGodotAdMobAdView::is_collapsible);
     
     ADD_SIGNAL(MethodInfo("on_ad_clicked",          PropertyInfo(Variant::INT, "UID")));
     ADD_SIGNAL(MethodInfo("on_ad_closed",           PropertyInfo(Variant::INT, "UID")));

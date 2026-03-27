@@ -35,6 +35,7 @@ var _is_hidden := false
 @onready var _show_button: Button = $ActionsCard/VBox/BannerActions/ShowBanner
 @onready var _hide_button: Button = $ActionsCard/VBox/BannerActions/HideBanner
 @onready var _get_size_button: Button = $ActionsCard/VBox/BannerActions/GetSize
+@onready var _collapsible_toggle: CheckButton = %Collapsible
 @onready var _x_value: LineEdit = %XValue
 @onready var _y_value: LineEdit = %YValue
 
@@ -57,7 +58,9 @@ func _update_ui_state(is_loaded: bool) -> void:
 	_destroy_button.disabled = !is_loaded
 	_get_size_button.disabled = !is_loaded
 
-func _get_ad_unit_id() -> String:
+func _get_ad_unit_id(is_collapsible: bool = false) -> String:
+	if is_collapsible:
+		return "ca-app-pub-3940256099942544/2014213617" if OS.get_name() == "Android" else "ca-app-pub-3940256099942544/8388050270"
 	return "ca-app-pub-3940256099942544/6300978111" if OS.get_name() == "Android" else "ca-app-pub-3940256099942544/2934735716"
 
 func _load_banner(hide_immediately: bool = false) -> void:
@@ -65,10 +68,14 @@ func _load_banner(hide_immediately: bool = false) -> void:
 		_ad_view.destroy()
 	
 	_update_ui_state(false)
-	_log("Loading adaptive banner%s..." % (" in background" if hide_immediately else ""))
+	var is_collapsible_request := _collapsible_toggle.button_pressed
+	_log("Loading adaptive banner%s%s..." % [
+		" in background" if hide_immediately else "",
+		" (collapsible)" if is_collapsible_request else ""
+	])
 	
 	var ad_size := AdSize.get_current_orientation_anchored_adaptive_banner_ad_size(AdSize.FULL_WIDTH)
-	_ad_view = AdView.new(_get_ad_unit_id(), ad_size, _ad_position)
+	_ad_view = AdView.new(_get_ad_unit_id(is_collapsible_request), ad_size, _ad_position)
 	_ad_view.ad_listener = _ad_listener
 	_ad_view.on_ad_paid = func(ad_value: AdValue) -> void:
 		var ad_source_name := "N/A"
@@ -83,8 +90,14 @@ func _load_banner(hide_immediately: bool = false) -> void:
 	_is_hidden = hide_immediately
 	if _is_hidden:
 		_ad_view.hide()
-		
-	_ad_view.load_ad(AdRequest.new())
+	
+	var ad_request := AdRequest.new()
+	if is_collapsible_request:
+		var collapsible_pos := "top" if _ad_position == AdPosition.TOP else "bottom"
+		ad_request.extras["collapsible"] = collapsible_pos
+		_log("Requesting collapsible banner (%s)" % collapsible_pos)
+			
+	_ad_view.load_ad(ad_request)
 
 func _on_load_banner_pressed() -> void:
 	_load_banner(false)
@@ -146,18 +159,26 @@ func _on_ad_clicked() -> void:
 
 func _on_ad_closed() -> void:
 	_log("Ad closed")
+	if Registry.safe_area:
+		Registry.safe_area.update_ad_overlap(_ad_view)
 
 func _on_ad_impression() -> void:
 	_log("Ad impression recorded")
 
 func _on_ad_loaded() -> void:
-	_log("Ad loaded successfully")
+	var is_collapsible := _ad_view.is_collapsible()
+	if is_collapsible:
+		_log("Success: Collapsible banner loaded.")
+	else:
+		_log("Ad loaded successfully. Collapsible: false")
 	_update_ui_state(true)
 	if Registry.safe_area and not _is_hidden:
 		Registry.safe_area.update_ad_overlap(_ad_view)
 
 func _on_ad_opened() -> void:
 	_log("Ad opened")
+	if Registry.safe_area:
+		Registry.safe_area.update_ad_overlap(_ad_view)
 #endregion
 
 func _update_position(new_position: AdPosition) -> void:

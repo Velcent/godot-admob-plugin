@@ -130,5 +130,10 @@ class PoingGodotAdMobAdView(godot: Godot?) : org.godotengine.godot.plugin.GodotP
     fun get_response_info(uid: Int) : Dictionary {
         return banners[uid]?.getResponseInfo() ?: Dictionary()
     }
+
+    @UsedByGodot
+    fun is_collapsible(uid: Int): Boolean {
+        return banners[uid]?.isCollapsible() ?: false
+    }
 }
 

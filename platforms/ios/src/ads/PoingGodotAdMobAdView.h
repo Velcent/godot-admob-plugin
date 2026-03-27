@@ -51,6 +51,7 @@ public:
     int get_height(int uid);
     int get_width_in_pixels(int uid);
     int get_height_in_pixels(int uid);
+    bool is_collapsible(int uid);
 
     static PoingGodotAdMobAdView *get_singleton();
 

@@ -106,6 +106,10 @@
   return (int)(self.bannerView.bounds.size.height * scale);
 }
 
+- (BOOL)isCollapsible {
+  return self.bannerView.isCollapsible;
+}
+
 - (void)addBannerViewToView:(GADBannerView *)bannerView {
   bannerView.translatesAutoresizingMaskIntoConstraints = NO;
 

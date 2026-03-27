@@ -111,6 +111,11 @@ func get_height_in_pixels() -> int:
 		return _plugin.get_height_in_pixels(_uid)
 	return -1
 
+func is_collapsible() -> bool:
+	if _plugin:
+		return _plugin.is_collapsible(_uid)
+	return false
+
 func _on_ad_clicked(uid: int) -> void:
 	if uid == _uid:
 		ad_listener.on_ad_clicked.call_deferred()

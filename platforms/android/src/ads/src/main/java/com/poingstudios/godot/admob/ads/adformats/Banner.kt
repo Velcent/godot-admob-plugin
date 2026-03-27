@@ -28,6 +28,7 @@ import android.view.Gravity
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -53,9 +54,8 @@ class Banner(
     private var safeArea: Rect = getSafeArea()
     private var mPosition: Position = extractPosition(adViewDictionary)
     private lateinit var mAdView: AdView
-    private var mAdSize: AdSize = (adViewDictionary["ad_size"] as Dictionary).convertToAdSize()
+    private var mAdSize: AdSize = (adViewDictionary["ad_size"] as Dictionary).convertToAdSize(activity)
     private var isHidden: Boolean = false
-
 
     private fun extractPosition(dict: Dictionary): Position {
         val value =
@@ -66,18 +66,15 @@ class Banner(
     }
 
     private val mLayoutChangeListener = OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-        Logger.debug("OnLayoutChanged")
         val newSafeArea = getSafeArea()
         if (newSafeArea == safeArea) {
             return@OnLayoutChangeListener
         }
         safeArea = newSafeArea
-        Logger.debug("safeArea changed")
         if (!isHidden) { // only update if is not hidden to improve performance
             activity.runOnUiThread { updatePosition() }
         }
     }
-
 
     object SignalInfos {
         val onAdClicked = SignalInfo("on_ad_clicked", Integer::class.java)
@@ -250,7 +247,11 @@ class Banner(
         return mAdSize.getHeightInPixels(activity)
     }
 
-    fun getResponseInfo() : Dictionary {
+    fun getResponseInfo(): Dictionary {
         return mAdView.responseInfo?.convertToGodotDictionary() ?: Dictionary()
+    }
+
+    fun isCollapsible(): Boolean {
+        return mAdView.isCollapsible
     }
 }

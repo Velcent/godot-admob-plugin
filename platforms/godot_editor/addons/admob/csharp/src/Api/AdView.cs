@@ -161,6 +161,13 @@ namespace PoingStudios.AdMob.Api
 			return -1;
 		}
 
+		public bool IsCollapsible()
+		{
+			if (_plugin != null)
+				return (bool)_plugin.Call("is_collapsible", _uid);
+			return false;
+		}
+
 		private void OnAdClicked(int uid)
 		{
 			if (uid != _uid) return;

@@ -47,6 +47,14 @@ Below are sample ad units for each format available on both Android and iOS:
     | Rewarded Interstitial | ca-app-pub-3940256099942544/6978759866 |
     | Native                | ca-app-pub-3940256099942544/3986624511 |
 
+### Specialized Test Identifiers
+While the standard ad units above can be used by adding extra parameters (like `collapsible`), the following specialized ad unit IDs **guarantee** that specific features are returned for testing your UI/UX:
+
+| Feature | Android | iOS |
+| :--- | :--- | :--- |
+| **Collapsible Banners** | `ca-app-pub-3940256099942544/2014213617` | `ca-app-pub-3940256099942544/8388050270` |
+
+
 
 ## Enable test devices
 To conduct more thorough testing with production-like ads, you can configure your device as a test device and utilize your own ad unit IDs created in the AdMob UI. You can add test devices either through the AdMob UI or programmatically using the Google Mobile Ads SDK.

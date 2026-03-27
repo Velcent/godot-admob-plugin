@@ -43,6 +43,7 @@ public partial class Banner : BaseTab
 	private Button _showBtn;
 	private Button _hideBtn;
 	private Button _getSizeBtn;
+	private CheckButton _collapsibleToggle;
 
 	private LineEdit _xValue;
 	private LineEdit _yValue;
@@ -56,6 +57,7 @@ public partial class Banner : BaseTab
 		_showBtn = GetNode<Button>("%BannerActions/ShowBanner");
 		_hideBtn = GetNode<Button>("%BannerActions/HideBanner");
 		_getSizeBtn = GetNode<Button>("%BannerActions/GetSize");
+		_collapsibleToggle = GetNode<CheckButton>("%Collapsible");
 
 		_loadBtn.Pressed += OnLoadPressed;
 		_loadBackgroundBtn.Pressed += OnLoadBackgroundPressed;
@@ -121,14 +123,24 @@ public partial class Banner : BaseTab
 		}
 	}
 
+	private string GetAdUnitId(bool isCollapsible = false)
+	{
+		if (isCollapsible)
+		{
+			return OS.GetName() == "iOS" ? "ca-app-pub-3940256099942544/8388050270" : "ca-app-pub-3940256099942544/2014213617";
+		}
+		return OS.GetName() == "iOS" ? AdUnitIdIos : AdUnitIdAndroid;
+	}
+
 	private void LoadBanner(bool hideImmediately)
 	{
 		DestroyAd();
 		UpdateUI(false);
-		Log($"Loading adaptive banner{(hideImmediately ? " in background" : string.Empty)}...");
+		bool isCollapsibleRequest = _collapsibleToggle.ButtonPressed;
+		Log($"Loading adaptive banner{(hideImmediately ? " in background" : string.Empty)}{(isCollapsibleRequest ? " (collapsible)" : string.Empty)}...");
 
 		var size = AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSize(AdSize.FullWidth);
-		_adView = new AdView(AdUnitId, size, _adPosition);
+		_adView = new AdView(GetAdUnitId(isCollapsibleRequest), size, _adPosition);
 		_isHidden = hideImmediately;
 
 		if (_isHidden)
@@ -140,7 +152,15 @@ public partial class Banner : BaseTab
 		{
 			OnAdLoaded = () =>
 			{
-				Log("Ad loaded successfully");
+				bool isCollapsible = _adView.IsCollapsible();
+				if (isCollapsible)
+				{
+					Log("Success: Collapsible banner loaded.");
+				}
+				else
+				{
+					Log("Ad loaded successfully. Collapsible: false");
+				}
 				UpdateUI(true);
 				if (!_isHidden)
 				{
@@ -154,11 +174,15 @@ public partial class Banner : BaseTab
 				SampleRegistry.SafeArea?.ResetAdOverlap();
 			},
 			OnAdClicked = () => Log("Ad clicked"),
-			OnAdOpened = () => Log("Ad opened"),
+			OnAdOpened = () => 
+			{
+				Log("Ad opened");
+				SampleRegistry.SafeArea?.UpdateAdOverlap(_adView);
+			},
 			OnAdClosed = () => 
 			{ 
 				Log("Ad closed"); 
-				SampleRegistry.SafeArea?.ResetAdOverlap();
+				SampleRegistry.SafeArea?.UpdateAdOverlap(_adView);
 			},
 			OnAdImpression = () => Log("Impression recorded"),
 		};
@@ -167,7 +191,15 @@ public partial class Banner : BaseTab
 			string adSourceName = _adView?.GetResponseInfo()?.LoadedAdapterResponseInfo?.AdSourceName ?? "N/A";
 			Log(string.Format("Ad paid: {0:F} {1} (precision: {2}, source: {3})", adValue.ValueMicros / 1000000.0, adValue.CurrencyCode, adValue.Precision, adSourceName));
 		};
-		_adView.LoadAd(new AdRequest());
+
+		var adRequest = new AdRequest();
+		if (isCollapsibleRequest)
+		{
+			string collapsiblePos = _adPosition == AdPosition.Top ? "top" : "bottom";
+			adRequest.Extras["collapsible"] = collapsiblePos;
+			Log($"Requesting collapsible banner ({collapsiblePos})");
+		}
+		_adView.LoadAd(adRequest);
 	}
 
 	private void OnLoadPressed() => LoadBanner(false);
