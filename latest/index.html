@@ -1265,8 +1265,6 @@
       
         
       
-        
-      
     
     
     
@@ -1308,34 +1306,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="mediate/integrate_partner_networks/ad_colony/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Integrate AdColony with Mediation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -1979,7 +1949,12 @@
 <ol>
 <li>Install the <a href="https://docs.godotengine.org/en/stable/tutorials/export/android_gradle_build.html">Android Build Template</a> by navigating to <code>Project → Install Android Build Template</code>.</li>
 <li>
-<p>Add your <a href="https://support.google.com/admob/answer/7356431">AdMob App ID</a> to your app's <code>res://addons/admob/android/config.gd</code> file by changing the variable <code>APPLICATION_ID</code>.</p>
+<ul>
+<li>In the left sidebar, locate the <strong>Admob</strong> section and click on <strong>Android</strong>.</li>
+<li>Add your <a href="https://support.google.com/admob/answer/7356431">AdMob App ID</a> to the <code>App Id</code> field.</li>
+<li>Enable or disable <code>Enabled</code> and Mediation plugins (<code>Mediation/Meta</code>, <code>Mediation/Vungle</code>) by toggling the respective checkboxes.</li>
+</ul>
+<p>Configure the Android preset options in <code>Project → Project Settings... → General</code>:</p>
 <div class="admonition tip">
 <p class="admonition-title">App ID vs Ad Unit ID</p>
 <ul>
@@ -1987,9 +1962,6 @@
 <li><strong>Ad Unit ID</strong> (contains <code>/</code>): Used to load specific ad formats in your code.</li>
 </ul>
 </div>
-</li>
-<li>
-<p>If you have Mediation, set true the libraries at <code>res://addons/admob/android/config.gd</code>, such as: <code>adcolony</code>, <code>meta</code>, <code>vungle</code>, etc...</p>
 </li>
 <li>
 <p>When exporting your project, select <code>Use Gradle Build</code>.</p>
@@ -2000,7 +1972,7 @@
 <div class="tabbed-block">
 <ol>
 <li>
-<p>When exporting your project, update the <code>GADApplicationIdentifier</code> with your <a href="https://support.google.com/admob/answer/7356431">AdMob App ID</a> and ensure that <code>Ad Mob</code> is enabled in the Plugins section of the Export dialog. If you have Mediation, also mark <code>Ad Mob Meta</code>, <code>Ad Mob AdColony</code>, etc...</p>
+<p>When exporting your project, update the <code>GADApplicationIdentifier</code> with your <a href="https://support.google.com/admob/answer/7356431">AdMob App ID</a> and ensure that <code>Ad Mob</code> is enabled in the Plugins section of the Export dialog. If you have Mediation, also mark <code>Ad Mob Meta</code>, etc...</p>
 <p><img alt="gadapplicationidentifier" src="assets/ios/gadapplicationidentifier.png" /></p>
 <div class="admonition tip">
 <p class="admonition-title">App ID vs Ad Unit ID</p>
