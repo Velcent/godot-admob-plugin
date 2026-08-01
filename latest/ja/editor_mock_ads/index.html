@@ -5241,6 +5241,7 @@
 <ul>
 <li>Godot の Control ノードを使用して、テンプレートスタイルのモックネイティブ広告（<code>small</code> と <code>medium</code> の両方のレイアウトをサポート）をレンダリングします。</li>
 <li>アプリのアイコン、タイトル、コールトゥアクション（行動喚起）ボタン、本文テキストなどのモックアセットを表示します。</li>
+<li>モックテンプレートが配置されると <code>on_native_overlay_ad_rendered</code> シグナルを発行し、実際のデバイス動作をミラーリングします。これにより、広告が完全にレイアウトされた後にのみ UI（<code>SafeArea</code> など）を安全に調整できます。</li>
 </ul>
 <p><img alt="Mock Native Ad" src="../../assets/mock_ad_native.png" /></p>
 <h2 id="_5">ライフサイクルコールバック</h2>

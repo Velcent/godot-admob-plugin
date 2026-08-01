@@ -5241,6 +5241,7 @@
 <ul>
 <li>Renders template-styled mock Native Ads (supporting both <code>small</code> and <code>medium</code> layouts) using Godot Control nodes.</li>
 <li>Shows mock assets like app icons, titles, call-to-action buttons, and body texts.</li>
+<li>Emits the <code>on_native_overlay_ad_rendered</code> signal once the mock template is positioned, mirroring the real device behavior so you can safely adjust UI (<code>SafeArea</code>, etc.) only after the ad is fully laid out.</li>
 </ul>
 <p><img alt="Mock Native Ad" src="../assets/mock_ad_native.png" /></p>
 <h2 id="lifecycle-callbacks">Lifecycle Callbacks</h2>

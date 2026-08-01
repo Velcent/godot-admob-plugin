@@ -5241,6 +5241,7 @@
 <ul>
 <li>Renderiza anúncios nativos simulados estilizados (suportando layouts <code>small</code> e <code>medium</code>) usando nós Control do Godot.</li>
 <li>Exibe elementos simulados como ícones de aplicativos, títulos, botões de chamada para ação (CTA) e textos informativos.</li>
+<li>Emite o sinal <code>on_native_overlay_ad_rendered</code> assim que o template mock é posicionado, espelhando o comportamento real do dispositivo para que você possa ajustar a UI (<code>SafeArea</code>, etc.) somente após o anúncio estar completamente renderizado.</li>
 </ul>
 <p><img alt="Mock Native Ad" src="../../assets/mock_ad_native.png" /></p>
 <h2 id="callbacks-de-ciclo-de-vida">Callbacks de Ciclo de Vida</h2>
